@@ -1,0 +1,1462 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ressurs migrasjon</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: kommunens nettsidemal — smal innholdskolonne, lenkeflis-rutenett, grå trekkspill, fargede infobokser */
+:root{
+  --bg:#ffffff; --fg:#1b1b1b; --muted:#4a5257;
+  --brand:#0e3b4e; --brand-2:#13506a; --link:#0e4f69;
+  --chev:#e0805f; --peach:#f0a68c; --sage:#dfe7d6;
+  --line:#0e3b4e; --hair:#d6dadc;
+  --acc-bg:#e8e8e6; --acc-hover:#dedfdc;
+  --blue:#dfeef8; --yellow:#fbeccb; --green:#2b8763; --mint:#e7f3ee;
+  --warn:#fde9e4; --warn-line:#c4462b;
+  --proto:#fff4c2;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:17px;line-height:1.6;margin:0}
+a{color:var(--link);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+.deadlink{color:var(--link);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;cursor:default}
+.deadlink.ext::after{content:"";display:inline-block;width:.8em;height:.8em;margin-left:.25em;vertical-align:-.05em;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M9 1h6v6h-1.6V3.7L7.6 9.5 6.5 8.4l5.8-5.8H9zM1 3h6v1.6H2.6v8.8h8.8V9H13v6H1z'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M9 1h6v6h-1.6V3.7L7.6 9.5 6.5 8.4l5.8-5.8H9zM1 3h6v1.6H2.6v8.8h8.8V9H13v6H1z'/%3E%3C/svg%3E") center/contain no-repeat}
+
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #f5b400;outline-offset:2px}
+a[target="_blank"]::after{content:"";display:inline-block;width:.8em;height:.8em;margin-left:.25em;vertical-align:-.05em;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M9 1h6v6h-1.6V3.7L7.6 9.5 6.5 8.4l5.8-5.8H9zM1 3h6v1.6H2.6v8.8h8.8V9H13v6H1z'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M9 1h6v6h-1.6V3.7L7.6 9.5 6.5 8.4l5.8-5.8H9zM1 3h6v1.6H2.6v8.8h8.8V9H13v6H1z'/%3E%3C/svg%3E") center/contain no-repeat}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.narrow{max-width:700px}
+
+/* prototype-stripe */
+.proto{background:var(--proto);font-size:14px;border-bottom:1px solid #e9d98a}
+.proto .wrap{padding-block:8px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+
+/* header */
+header.site{border-top:2px solid #0e4f8a;border-bottom:1px solid var(--hair);background:var(--bg);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+header.site .wrap{display:flex;align-items:center;gap:20px;padding-block:14px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);flex-shrink:0}
+.logo svg{width:34px;height:44px}
+.logo>span{font-size:14px;letter-spacing:.02em;line-height:1.05;text-transform:uppercase}.logo b{font-weight:700}
+.toplinks{display:flex;gap:22px;font-size:15px;color:#13506a}
+
+.hbtn{font-size:17px;color:#0e3b4e;background:var(--bg);border:1.5px solid #1d6b55;border-radius:6px;padding:13px 26px;display:inline-flex;align-items:center;gap:12px;cursor:default}
+
+.hbtns{display:flex;gap:20px}
+.toplinks{margin-left:auto}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+
+/* search panel */
+.searchpanel{border-bottom:1px solid var(--hair);background:#f6f7f7}
+.searchpanel .wrap{padding-block:18px}
+.searchpanel label{font-weight:600;display:block;margin-bottom:6px}
+.sfield{display:flex;gap:8px}
+.sfield input{flex:1;min-width:0;font:inherit;padding:11px 14px;border:1.5px solid var(--brand);border-radius:6px;background:#fff;color:var(--fg)}
+.results{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:2px}
+.results li a{display:block;padding:10px 12px;background:#fff;border-left:3px solid var(--chev);text-decoration:none;color:var(--fg)}
+.results li a:hover{background:#fdf3ef}
+.results .rt{font-weight:600;color:var(--brand)}
+.results .rp{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.results .rs{font-size:15px;color:var(--muted);display:block}
+.results mark{background:#ffe08a;color:inherit}
+.noresult{margin:12px 0 0;color:var(--muted)}
+
+/* breadcrumb */
+.crumbs{font-size:14px;font-weight:500;color:#0e3b4e;padding-block:14px 0}
+.crumbs ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 0}
+.crumbs li{display:flex;align-items:center}
+.crumbs li+li::before{content:"›";margin:0 14px;font-size:18px;line-height:1}
+.crumbs a{color:var(--fg);text-decoration:none}
+.crumbs a:hover{text-decoration:underline}
+.crumbs a{color:#0e3b4e;font-weight:600}.crumbs [aria-current]{font-weight:400}
+
+/* page */
+main{padding-bottom:64px}
+.page{overflow-wrap:break-word}
+.page h1{color:var(--brand);font-size:clamp(28px,4.4vw,38px);line-height:1.2;font-weight:700;margin:28px 0 18px;text-wrap:balance;letter-spacing:-.01em}
+.page h2{color:var(--fg);font-size:clamp(22px,3vw,26px);line-height:1.25;margin:44px 0 12px;text-wrap:balance;scroll-margin-top:100px}
+.page h3{font-size:19px;margin:28px 0 8px;scroll-margin-top:100px}
+.ingress{font-size:19px;line-height:1.55}
+.page p,.page li{max-width:66ch}
+.page ul{padding-left:22px}
+.page ul.tiles,.page ul.jump,.page ul.results{padding-left:0}
+.page li{margin:4px 0}
+
+/* hero on forside */
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:center}
+.hero-art{position:relative;height:260px}
+.hero-art .c{position:absolute;border-radius:50%}
+.c1{width:150px;height:150px;background:var(--peach);left:6%;top:-10px}
+.c2{width:250px;height:250px;background:var(--sage);left:20%;top:10px}
+.c3{width:190px;height:190px;background:var(--brand);right:-4%;top:-30px}
+.c4{width:150px;height:150px;background:#8fc7df;left:38%;top:62px;display:grid;place-items:center;box-shadow:0 0 0 8px #fff}
+.c4 svg{width:84px;height:84px}
+@media (max-width:720px){.hero{grid-template-columns:1fr}.hero-art{display:none}}
+
+/* tiles */
+.tiles{list-style:none;padding:0;margin:36px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:8px}
+.tiles li{border-top:1.5px solid var(--line);margin:0;max-width:none}
+.tiles li:nth-last-child(-n+3){border-bottom:1.5px solid var(--line)}
+.tiles a{display:flex;align-items:center;gap:16px;min-height:72px;padding:12px 8px;color:var(--fg);text-decoration:none;font-weight:500;font-size:16px;line-height:1.3}
+.tiles a:hover{background:#f5f6f6}
+.tiles a:hover span{text-decoration:underline}
+.chev{flex-shrink:0;width:9px;height:14px;color:var(--chev)}
+@media (max-width:820px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tiles li:nth-last-child(-n+3){border-bottom:0}.tiles li:nth-last-child(-n+2){border-bottom:1.5px solid var(--line)}}
+@media (max-width:520px){.tiles{grid-template-columns:1fr}.tiles li:nth-last-child(-n+2){border-bottom:0}.tiles li:last-child{border-bottom:1.5px solid var(--line)}}
+
+/* boxes */
+.box{border-radius:14px;padding:22px 26px;margin:24px 0}
+.box>:first-child{margin-top:0}.box>:last-child{margin-bottom:0}
+.box-blue{background:var(--blue)}
+.box-yellow{background:var(--yellow)}
+.box-yellow h2,.box-yellow h3{margin-top:0}
+.box-outline{border:1.5px solid var(--green);border-radius:6px;font-style:italic}
+.box-mint{background:var(--mint);border-left:5px solid var(--green);border-radius:6px}
+.box-warn{background:var(--warn);border-left:5px solid var(--warn-line);border-radius:6px}
+.box h2,.box h3{font-size:20px;margin:0 0 8px}
+.linklist{list-style:disc;padding-left:22px}
+
+/* featured CTA */
+.cta{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center;background:var(--brand);color:#fff;border-radius:14px;padding:22px 26px;text-decoration:none;margin:32px 0 0}
+.cta:hover{background:var(--brand-2)}
+.cta .n{font-size:44px;font-weight:700;line-height:1;color:var(--peach)}
+.cta b{display:block;font-size:20px}
+.cta small{font-size:15px;opacity:.88}
+.cta .arrow{font-size:24px}
+@media (max-width:520px){.cta{grid-template-columns:auto minmax(0,1fr)}.cta .arrow{display:none}}
+
+/* on-this-page chips */
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 4px;padding:0;list-style:none}
+.jump li{margin:0}
+.jump a{display:inline-block;padding:6px 14px;border:1.5px solid var(--brand);border-radius:999px;font-size:14px;color:var(--brand);text-decoration:none;font-weight:500}
+.jump a:hover{background:var(--brand);color:#fff}
+.jumplabel{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:24px 0 0}
+
+/* accordions */
+details.acc{margin:10px 0;border-radius:8px;background:var(--acc-bg);scroll-margin-top:100px}
+details.acc>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:16px;padding:18px 22px;font-size:19px;font-weight:500;border-radius:8px}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary:hover{background:var(--acc-hover)}
+details.acc>summary::before{content:"↓";font-size:20px;line-height:1;flex-shrink:0}
+details.acc[open]>summary{border:1.5px solid var(--green);border-radius:8px 8px 0 0}
+details.acc[open]>summary::before{content:"↑"}
+details.acc .acc-body{background:var(--bg);padding:20px 22px 8px;border:1.5px solid var(--acc-bg);border-top:0;border-radius:0 0 8px 8px}
+details.acc .acc-body>:first-child{margin-top:0}
+
+
+/* forside: to grupper */
+.godt{margin:16px 0 0;font-size:16px}
+.tilegroup{margin-top:48px}
+.tilegroup h2{margin:0 0 4px}
+.tilesub{margin:0;color:var(--muted)}
+.tilegroup .tiles{margin-top:20px}
+.eyebrow{margin:28px 0 -14px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--chev)}
+
+/* fire veier */
+.veier{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:auto repeat(10,auto);column-gap:14px;margin:32px 0 8px}
+.vei{display:grid;grid-row:span 11;grid-template-rows:subgrid;background:var(--acc-bg);border-radius:12px;padding:0 18px 18px;min-width:0;scroll-margin-top:100px}
+.vei header{display:flex;gap:10px;align-items:center;padding:18px 0 12px;border-bottom:1.5px solid var(--brand)}
+.vei h2{margin:0;font-size:19px;line-height:1.25}
+.vei-n{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center}
+.vei dl{display:grid;grid-row:span 10;grid-template-rows:subgrid;margin:0}
+.vei dt{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:14px}
+.vei dd{margin:2px 0 0;font-size:16px;line-height:1.45}
+.vei dt.pit{color:var(--warn-line);margin-top:16px;padding-top:12px;border-top:1px dashed #b9b4ad}
+.vei dd.pit{font-weight:600}
+@media (max-width:1000px){.veier{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px}}
+@media (max-width:600px){.veier{grid-template-columns:1fr}}
+
+/* question cards (4 spørsmål) */
+.q{border-top:1.5px solid var(--line);padding-top:6px;margin-top:40px;scroll-margin-top:100px}
+.q h2{margin-top:10px;display:flex;gap:14px;align-items:baseline}
+.q h2 .qn{font-size:15px;font-weight:700;color:#fff;background:var(--brand);border-radius:50%;width:32px;height:32px;display:inline-grid;place-items:center;flex-shrink:0;transform:translateY(-2px)}
+.yn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.yn>div{border-radius:10px;padding:18px 20px;min-width:0}
+.yn .yes{background:var(--mint)}
+.yn .no{background:var(--yellow)}
+.yn h3{margin:0 0 6px;font-size:14px;text-transform:uppercase;letter-spacing:.08em}
+.yn p{margin:8px 0}
+.do{font-weight:600}
+@media (max-width:640px){.yn{grid-template-columns:1fr}}
+
+/* resource cards (Bruk når) */
+.kort{border-top:1.5px solid var(--hair);padding:18px 0 4px;scroll-margin-top:100px}
+.kort h3{margin:0 0 6px;color:var(--brand)}
+.kort p{margin:6px 0}
+.meta{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 14px;margin:10px 0 8px;font-size:16px}
+.meta dt{font-weight:600}
+.meta dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;background:var(--blue);color:var(--brand);padding:2px 8px;border-radius:4px;margin-right:6px}
+
+/* emergency numbers */
+.numbers{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:18px 0}
+.numbers div{background:var(--warn);border-radius:10px;padding:14px 16px}
+.numbers b{display:block;font-size:28px;color:var(--warn-line);font-variant-numeric:tabular-nums;line-height:1.1}
+.numbers span{font-size:15px}
+
+/* glossary */
+dl.gloss{margin:16px 0}
+dl.gloss dt{font-weight:700;margin-top:12px}
+dl.gloss dd{margin:2px 0 0}
+
+/* related + other topics */
+.related{margin-top:48px}
+.othertopics h2{font-size:20px}
+
+/* feedback (som på kommunens sider) */
+.feedback{text-align:center;padding-top:56px}
+.feedback .wrap{padding-block:0}
+.feedback h2{font-size:22px;margin:0 0 18px;font-weight:600}
+.fbtns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.fbtn{font:inherit;font-size:14px;font-weight:600;letter-spacing:.04em;padding:10px 14px;border-radius:6px;border:1.5px solid var(--brand);background:var(--bg);color:var(--brand);cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+.fbtn svg{width:22px;height:22px}
+.fbtn:hover{background:var(--brand);color:#fff}
+#fbStep2{max-width:520px;margin:0 auto;text-align:left}
+#fbStep2 label{font-weight:600}
+#fbStep2 textarea{width:100%;min-height:90px;font:inherit;font-size:16px;padding:10px 12px;border:1.5px solid #8a9296;border-radius:6px;margin:8px 0;background:#fff;color:var(--fg)}
+.feedback .thanks{display:inline-block;background:var(--mint);padding:12px 18px;border-radius:6px;margin:0}
+.feedback .small{font-size:14px;color:var(--muted)}
+
+/* wave + footer */
+.wave{margin-top:-30px;line-height:0;pointer-events:none}
+.wave svg{display:block;width:100%;height:clamp(120px,22vw,320px)}
+footer.site{background:#003a52;color:#fff}
+footer.site .wrap{max-width:1180px;padding-block:24px 72px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px;font-size:15px}
+footer.site h2{font-size:26px;font-weight:600;margin:0 0 22px}
+footer.site h3{font-size:17px;font-weight:700;margin:16px 0 4px}
+footer.site h2+h3{margin-top:0}
+footer.site p{margin:0}
+footer.site .gap{margin-top:28px}
+footer.site .stack{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+footer.site .fake{color:#fff}
+footer.site .some{display:flex;gap:8px;margin-top:14px}
+footer.site .some svg{width:22px;height:22px}
+.shortcuts{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.shortcuts li{display:flex;gap:14px;align-items:center}
+.shortcuts li::before{content:"›";font-size:20px;line-height:1;transform:translateY(-2px)}
+.totop{position:fixed;right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:#1d7a52;cursor:pointer;display:grid;place-items:center;z-index:15}
+.totop svg{width:24px;height:24px}
+@media (max-width:900px){footer.site .wrap{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){footer.site .wrap{grid-template-columns:1fr}}
+@media (max-width:720px){.toplinks{display:none}.hbtns{margin-left:auto}.hbtn .lbl{display:none}.hbtn{padding:10px 12px}.hbtn-wide{display:none}}
+
+/* ikke-klikkbare lenker i kommunens generiske topp/bunn */
+.fake{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;cursor:default}
+
+/* 4 spørsmål som nedtrekk */
+details.qacc>summary{align-items:flex-start;line-height:1.35}
+details.qacc .qn{font-size:15px;font-weight:700;color:#fff;background:var(--brand);border-radius:50%;width:30px;height:30px;display:inline-grid;place-items:center;flex-shrink:0}
+details.qacc .acc-body>p:last-child{margin-bottom:14px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="logo" aria-label="Tønsberg kommune">
+      <svg viewBox="0 0 34 44" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5aa9df"/><stop offset="1" stop-color="#1e6fb3"/></linearGradient></defs>
+        <path d="M2 2h30v22c0 9-7 15-15 18C9 39 2 33 2 24z" fill="url(#lg)"/>
+        <path d="M11 34c-3-6-3-13 0-19 2-4 6-4 6 0s-5 4-4 0" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M23 34c3-6 3-13 0-19-2-4-6-4-6 0s5 4 4 0" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M17 12v26" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span><b>Tønsberg</b><br>kommune</span>
+    </span>
+    <div class="toplinks"><span class="fake">Min side</span><span class="fake">Kart</span><span class="fake">Jobbe i kommunen</span></div>
+    <div class="hbtns">
+      <span class="hbtn hbtn-wide">Kontakt oss</span>
+      <span class="hbtn"><span class="lbl">Søk</span>
+        <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.2 10.2 15 15" stroke="currentColor" stroke-width="1.5"/></svg></span>
+      <span class="hbtn"><span class="lbl">Meny</span>
+        <svg width="18" height="14" viewBox="0 0 16 14" aria-hidden="true"><path d="M0 1h16M0 7h16M0 13h16" stroke="currentColor" stroke-width="1.5"/></svg></span>
+    </div>
+  </div>
+</header>
+
+
+<nav class="crumbs wrap" aria-label="Du er her">
+  <ol id="crumbs"></ol>
+</nav>
+
+<main id="main">
+
+<!-- ============ FORSIDE ============ -->
+<section class="page" id="forside" data-title="Ressurs migrasjon">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1>Ressurs migrasjon</h1>
+        <p class="ingress">Her får du raske svar når du møter migrasjonsfamilier med barn 0–5 år i jobben.</p>
+        <p>Du får vite hvordan NAV og andre tjenester jobber, hva familien får uten å søke selv, og hvor du kan henvise videre. Innholdet er laget for å brukes mens du snakker med familien.</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <span class="c c1"></span><span class="c c2"></span><span class="c c3"></span>
+        <span class="c c4"><svg viewBox="0 0 84 84"><circle cx="30" cy="22" r="9" fill="#0e3b4e"/><circle cx="56" cy="30" r="7" fill="#0e3b4e"/><path d="M14 64c0-14 7-26 16-26s16 12 16 26z" fill="#0e3b4e"/><path d="M44 64c0-11 5-20 12-20s12 9 12 20z" fill="#e0805f"/></svg></span>
+      </div>
+    </div>
+
+    <a class="cta" href="#forste-mote">
+      <span class="n">4</span>
+      <span><b>Start med de fire viktige spørsmålene</b><small>Finn raskt ut om familien har kontakt med NAV, helse, norskopplæring og barnehage.</small></span>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+
+    <p class="godt"><strong>Godt å vite:</strong> Hvordan familien kom til Norge, avgjør mye. <a href="#fire-veier">Se fire veier til Tønsberg</a></p>
+
+    <div class="tilegroup">
+      <h2>Forstå de andre tjenestene</h2>
+      <p class="tilesub">Hvordan NAV, helse, barnehage og andre jobber, og hvor du kan henvise.</p>
+      <ul class="tiles" id="tiles"></ul>
+    </div>
+
+    <div class="tilegroup">
+      <h2>Verktøy for ditt fag</h2>
+      <p class="tilesub">Ressurser for å møte migrasjonsfamilier i din egen jobb.</p>
+      <ul class="tiles" id="fagtiles"></ul>
+    </div>
+
+    <div class="box box-blue" style="margin-top:44px">
+      <h2>Dette er en pilot</h2>
+      <p>Mange av tilbudene drives av frivillige og endrer seg ofte. Finner du noe som er feil eller utdatert, svar «Nei» nederst på siden og skriv hva som er feil, eller skriv i Teams-kanalen.</p>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ DET FØRSTE MØTET ============ -->
+<section class="page" id="forste-mote" data-title="Det første møtet – de fire viktige spørsmålene" hidden>
+  <div class="wrap narrow">
+    <h1>Det første møtet – de fire viktige spørsmålene</h1>
+    <p class="ingress">En rask sjekk når du møter migrasjonsfamilier eller nyankomne. Still disse spørsmålene for å finne ut om familien er koblet på de viktigste delene av systemet.</p>
+
+    <div class="box box-mint">
+      <p><strong>Opplever du språkvansker?</strong> Bruk tolk. Se <a href="#sprak-tolk">Språk og tolk</a>.</p>
+    </div>
+
+    <details class="acc qacc" id="sp-1">
+      <summary><span class="qn">1</span><span>Har du en programveileder eller kontaktperson i kommunen?</span></summary>
+      <div class="acc-body">
+      <div class="yn">
+        <div class="yes"><h3>Hvis ja</h3>
+          <p>Programveilederen eller bosettingsteamet er hovedkontakt og kan svare på mye og veilede videre.</p>
+          <p><span class="do">Tips:</span> Veileder har ansvar for koordinering, oppfølging og veiledning. Personen kan ta kontakt med veilederen eller kontaktpersonen sin.</p></div>
+        <div class="no"><h3>Hvis nei</h3>
+          <p>Stor sannsynlighet for at familien ikke har veileder, og må finne fram i systemet selv.</p>
+          <p><span class="do">Gjør dette:</span> Fortsett med spørsmålene under, eller spør: «Hva er det viktigste du trenger hjelp med akkurat nå?» Bruk <a href="#forside">temasidene</a> for å hjelpe.</p></div>
+      </div>
+      <div class="box box-blue"><p><strong>Hvilken vei kom familien til Tønsberg?</strong> Det avgjør mye av hvem som følger dem opp. Se <a href="#fire-veier">Fire veier til Tønsberg</a>.</p></div>
+      <p>Les mer om introduksjonsprogram og hvem som får oppfølging i <a href="#opphold-intro">Oppholdsstatus og rettigheter</a>.</p>
+      </div>
+    </details>
+
+    <details class="acc qacc" id="sp-2">
+      <summary><span class="qn">2</span><span>Har du vært hos fastlege eller helsestasjon?</span></summary>
+      <div class="acc-body">
+      <div class="yn">
+        <div class="yes"><h3>Hvis ja</h3>
+          <p>Personen er koblet til helsetjenesten.</p>
+          <p><span class="do">Tips:</span> Spør: «Vet du hvordan du kan bestille time?»</p></div>
+        <div class="no"><h3>Hvis nei</h3>
+          <p>Personen kan mangle tilgang til helsehjelp.</p>
+          <p><span class="do">Gjør dette:</span> Informer om Tønsberg fastlegekontor, tlf. <span class="deadlink">33 29 25 99</span>, Kjellengveien 2b, 3125 Tønsberg. De henviser videre, for eksempel til tuberkulosesjekk og helsestasjon for oppfølging av barn.</p>
+          <p>Det kan være ventetid og språkutfordringer på telefon. Send gjerne e-post til fastlegekontoret@tonsberg.kommune.no.</p></div>
+      </div>
+      <p>Les mer i <a href="#helse">Helse og helsestasjon</a>.</p>
+      </div>
+    </details>
+
+    <details class="acc qacc" id="sp-3">
+      <summary><span class="qn">3</span><span>Går du på norskkurs eller annen opplæring?</span></summary>
+      <div class="acc-body">
+      <div class="yn">
+        <div class="yes"><h3>Hvis ja</h3>
+          <p>Personen er i gang med integrering og språkopplæring.</p>
+          <p><span class="do">Tips:</span> Spør: «Hvor går du på skolen?»</p></div>
+        <div class="no"><h3>Hvis nei</h3>
+          <p>Mange vet ikke at de har rett på norskopplæring, og mister rettigheten fordi de venter for lenge.</p>
+          <p><span class="do">Gjør dette:</span> Henvis til eller kontakt Tønsberg læringssenter på <span class="deadlink">33 40 68 00</span>, eller se <span class="deadlink ext">nettsiden om norskopplæring</span>. Det går også an å møte opp i resepsjonen i Grenaderveien 11, 3122 Tønsberg.</p></div>
+      </div>
+      <p>Mer om rettigheter etter integreringsloven i <a href="#opphold">Oppholdsstatus og rettigheter</a>.</p>
+      </div>
+    </details>
+
+    <details class="acc qacc" id="sp-4">
+      <summary><span class="qn">4</span><span>Går barna i barnehage eller skole?</span></summary>
+      <div class="acc-body">
+      <div class="yn">
+        <div class="yes"><h3>Hvis ja</h3>
+          <p>Barna er koblet til oppvekstsystemet.</p>
+          <p><span class="do">Tips:</span> Spør om familien trenger informasjon om aktiviteter. Se <a href="#moteplasser">Møteplasser og aktivitet</a>.</p></div>
+        <div class="no"><h3>Hvis nei</h3>
+          <p>Mange foreldre kjenner ikke norsk barnehage. Her er <span class="deadlink ext">informasjon om barnehage på mange språk</span>.</p>
+          <p><span class="do">Gjør dette:</span> Hjelp familien å kontakte barnehage eller skole. Fortell om <a href="#barnehage-typer">åpen barnehage</a>, det er et godt første steg.</p></div>
+      </div>
+      <p>Les mer i <a href="#barnehage">Barnehage</a>.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ BARNEHAGE ============ -->
+<section class="page" id="barnehage" data-title="Barnehage" hidden>
+  <div class="wrap narrow">
+    <h1>Barnehage</h1>
+    <p class="ingress">For noen foreldre er barnehage ukjent, både som institusjon og innhold. Barnehagen er ofte barnets første møte med det norske samfunnet.</p>
+    <p class="jumplabel">På denne siden</p>
+    <ul class="jump">
+      <li><a href="#barnehage-om">Om barnehagen</a></li>
+      <li><a href="#barnehage-soknad">Søknad</a></li>
+      <li><a href="#barnehage-okonomi">Økonomi</a></li>
+      <li><a href="#sprak-tolk">Tolk</a></li>
+    </ul>
+
+    <h2 id="barnehage-om">Hva er barnehagen?</h2>
+    <p>Det er frivillig å ha barn i barnehagen, men deltakelse gir mange barn språk, venner og en trygg start.</p>
+    <p>Brosjyren <span class="deadlink ext">«Barnehage – en god start»</span> har enkel informasjon på 14 språk til familier som ikke har plass ennå.</p>
+
+    <h3 id="barnehage-typer">Dette har vi i Tønsberg</h3>
+    <details class="acc" open>
+      <summary>Barnehager (kommunale og private)</summary>
+      <div class="acc-body">
+        <ul>
+          <li>Søk før 1. mars for å få plass. Barn som lærer norsk før skolestart har fortrinn.</li>
+          <li>Åpningstiden er 07.15–16.30.</li>
+        </ul>
+      </div>
+    </details>
+    <details class="acc">
+      <summary>Åpne barnehager</summary>
+      <div class="acc-body">
+        <ul>
+          <li>Gratis for alle barn som ikke har barnehageplass.</li>
+          <li>En av foreldrene og barnet kommer sammen (unntaksvis begge foreldre).</li>
+          <li>En god introduksjon før barnehagestart.</li>
+          <li>Åpen barnehage i sentrum er åpen mandag og onsdag 9–15, og følger skolens ferier.</li>
+        </ul>
+        <p><span class="deadlink ext">Les mer om åpne barnehager</span></p>
+      </div>
+    </details>
+    <div class="box box-mint">
+      <p><strong>Er familien usikker?</strong> Foreslå åpen barnehage først. Der kan de stille spørsmål og få svar.</p>
+    </div>
+
+    <h2 id="barnehage-soknad">Søknad – her stopper det ofte opp</h2>
+    <p>Hovedopptaket har frist 1. mars, men det er mulig å søke resten av året også, særlig for familier som er nye i kommunen. Søknaden slettes ved årsskiftet 31. desember og må da legges inn på nytt.</p>
+    <p>Mange sliter med de digitale løsningene, språket og fristene.</p>
+    <div class="box box-yellow">
+      <p><strong>Hvis barnet ikke har plass:</strong> Spør «Har dere søkt?» og åpne <span class="deadlink ext">søknadssiden</span> sammen.</p>
+      <p><strong>Hvis familien står fast:</strong> Henvis til <span class="deadlink ext">åpen barnehage</span> for hjelp.</p>
+      <p>Ikke anta at det «sikkert er gjort».</p>
+    </div>
+
+    <h2 id="barnehage-okonomi">Økonomi – dette er nesten alltid et tema</h2>
+    <p>Mange familier har rett på redusert betaling og gratis kjernetid. Problemet er at foreldrene ikke vet hvilke ordninger som finnes, tror de ikke kvalifiserer, eller synes dokumentasjonskravet er vanskelig.</p>
+    <div class="box box-yellow">
+      <p><strong>Spør konkret:</strong> «Har dere søkt om redusert betaling?»</p>
+      <p><strong>Hvis nei:</strong></p>
+      <ul>
+        <li>Åpne kommunens side om pris og redusert betaling sammen: <span class="deadlink ext">informasjon på flere språk</span>.</li>
+        <li>Forklar at de må laste opp skattemelding eller lønnsslipp.</li>
+        <li>Er økonomien vanskelig, kan NAV hjelpe. Se <a href="#okonomi">Økonomi og arbeid</a>.</li>
+      </ul>
+    </div>
+
+    <div class="box box-blue related">
+      <h2>Finner du ikke svaret?</h2>
+      <p>Kontakt Melissa Seierstad: melissa.s.seierstad@tonsberg.kommune.no, tlf. <span class="deadlink">909 43 344</span>.</p>
+      <p>Foreldre kan også besøke <span class="deadlink ext">åpen barnehage</span> i åpningstiden.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HELSE ============ -->
+<section class="page" id="helse" data-title="Helse og helsestasjon" hidden>
+  <div class="wrap narrow">
+    <h1>Helse og helsestasjon</h1>
+    <p class="ingress">Flyktninger som bosettes i Tønsberg kommune har samme rettigheter og kan bruke helse- og omsorgstjenester som alle andre.</p>
+    <p class="jumplabel">På denne siden</p>
+    <ul class="jump">
+      <li><a href="#helse-fastlege">Fastlegekontor</a></li>
+      <li><a href="#helse-helsestasjon">Helsestasjon</a></li>
+      <li><a href="#helse-tann">Tannhelse</a></li>
+      <li><a href="#helse-akutt">Akutt hjelp</a></li>
+      <li><a href="#helse-vaksiner">Vaksiner</a></li>
+    </ul>
+
+    <div class="box box-blue">
+      <h2>Godt sted å starte</h2>
+      <ul>
+        <li><a href="#helse-fastlege">Tønsberg fastlegekontor</a> er ofte første kontakt med helsevesenet for innvandrere.</li>
+        <li><a href="#helse-helsestasjon">Helsestasjonen</a> følger opp barn 0–5 år med helsekontroll, informasjon og veiledning.</li>
+        <li><strong>Er mor gravid?</strong> Spør om hun har vært i kontakt med helsestasjonen eller <span class="deadlink ext">jordmortjenesten</span>.</li>
+      </ul>
+    </div>
+
+    <h2 id="helse-flyktninger">Helsehjelp til flyktninger og asylsøkere</h2>
+    <p>Kommunen har en egen side om <span class="deadlink ext">helsetjenester til flyktninger</span>. Der finner du:</p>
+    <ul>
+      <li>rett til helsehjelp for flyktninger og asylsøkere</li>
+      <li>hvordan få helsetjenester (fastlege, legevakt og akutt hjelp)</li>
+      <li>oppfølging etter ankomst (helsekartlegging, tuberkulosekontroll m.m.)</li>
+      <li>helsetilbud for barn og unge, inkludert helsestasjon, skolehelsetjeneste og tannhelse</li>
+    </ul>
+
+    <h2 id="helse-fastlege">Har familien ikke kontakt med helsetjenesten? Start her</h2>
+    <div class="kort">
+      <h3>Tønsberg fastlegekontor</h3>
+      <p>Når flyktninger kommer til Tønsberg, hjelper programveileder med å kontakte helse via Tønsberg fastlegekontor. Der møter familien også helsesykepleier. Deretter får familien tildelt helsestasjon, fastlege og informasjon om tuberkulosesjekk.</p>
+      <p>Familiegjenforente, arbeidsinnvandrere og andre tilflyttere må ta kontakt selv, direkte med fastlegekontoret.</p>
+      <dl class="meta">
+        <dt>Telefon</dt><dd><span class="deadlink">33 29 25 99</span></dd>
+        <dt>E-post</dt><dd>fastlegekontoret@tonsberg.kommune.no</dd>
+        <dt>Adresse</dt><dd>Kjellengveien 2b, 3125 Tønsberg (ved siden av legevakta på Kjelleparken)</dd>
+      </dl>
+    </div>
+
+    <h2 id="helse-helsestasjon">Helsestasjon</h2>
+    <p>Helsestasjonene er et gratis tilbud til alle barn og foreldre i Tønsberg. Familien får oppfølging av barnets helse og utvikling, vaksiner, råd om foreldrerollen og hjelp ved bekymringer for barnets trivsel eller utvikling.</p>
+    <p>For migrasjonsfamilier kan helsestasjonen være en viktig inngang til helsesystemet. Oppfordre familier til å ta kontakt hvis de har barn 0–5 år, er gravide, eller har spørsmål om barnets helse, utvikling eller foreldrerollen.</p>
+    <details class="acc">
+      <summary>Hvilken helsestasjon hører familien til?</summary>
+      <div class="acc-body">
+        <p>Det er tre helsestasjoner i Tønsberg: Sentrum, Slagen og Re. Man hører vanligvis til helsestasjonen i bydelen man bor i.</p>
+        <p>Er familien usikker, kan de (eller du) kontakte Re helsestasjon på tlf. <span class="deadlink">33 40 69 40</span>.</p>
+        <p><span class="deadlink ext">Les mer om helsestasjon for barn 0–5 år</span></p>
+      </div>
+    </details>
+
+    <h2 id="helse-tann">Tannhelse</h2>
+    <p>De første 6 månedene i Norge får flyktninger og asylsøkere tilbud om gratis akutt tannbehandling. Etter 6 måneder har de i alderen 0–20 år de samme rettighetene som norske barn og unge.</p>
+    <p><span class="deadlink ext">Informasjon om tannhelse på ulike språk</span></p>
+
+    <h2 id="helse-akutt">Behov for øyeblikkelig hjelp?</h2>
+    <div class="numbers">
+      <div><b>113</b><span>Ambulanse ved fare for liv</span></div>
+      <div><b>116 117</b><span>Legevakt ved akutt, alvorlig sykdom eller ulykke</span></div>
+    </div>
+    <p>Legevakten nærmest der du ringer fra svarer. Legevakten i Tønsberg ligger i <span class="deadlink ext">Kjellengveien 2B, 3125 Tønsberg</span>.</p>
+    <p>Se også <a href="#krise">Krisesituasjoner</a> for psykisk helse og vold i nære relasjoner.</p>
+
+    <h2 id="helse-vaksiner">Vaksiner</h2>
+    <p>Det er ekstra viktig å gi god informasjon om vaksiner til migrasjonsfamilier. Folkehelseinstituttet har <span class="deadlink ext">informasjon om vaksiner og vaksinasjonsprogrammet på flere språk</span>.</p>
+
+    <div class="box box-mint">
+      <p><strong>Alle offentlige tjenester har plikt til å bruke tolk.</strong> Se <a href="#sprak-tolk">Språk og tolk</a> og <span class="deadlink ext">brosjyre på 25 språk om rett til tolk i helsetjenesten</span>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPRÅK OG TOLK ============ -->
+<section class="page" id="sprak-tolk" data-title="Språk og tolk" hidden>
+  <div class="wrap narrow">
+    <h1>Språk og tolk</h1>
+    <p class="ingress">Hvis samtalen er viktig, bestill tolk. Det sikrer at dere forstår hverandre, og at begge foreldrene får den samme informasjonen.</p>
+
+    <h2 id="tolk-bestille">Tolketjenester for ansatte i Tønsberg kommune</h2>
+    <p>Kommunen har ny avtale om tolketjeneste med Larvik kommune. Ta kontakt med nærmeste leder for orientering.</p>
+    <p><span class="deadlink ext">Bestille tolk hos Larvik tolketjeneste</span></p>
+
+    <details class="acc" open>
+      <summary>Telefontolk</summary>
+      <div class="acc-body">
+        <p>Mest brukt og oppleves som mest fleksibelt. Brukes ofte når sensitive tema tas opp. Det er mulig å bestille tolk med bestemt kjønn.</p>
+      </div>
+    </details>
+    <details class="acc">
+      <summary>Skjermtolk</summary>
+      <div class="acc-body">
+        <p>Et godt alternativ til telefontolk. Like fleksibelt, men får også med kroppsspråk og annen kommunikasjon som ikke er ord.</p>
+      </div>
+    </details>
+    <details class="acc">
+      <summary>Slik får du en god samtale med tolk</summary>
+      <div class="acc-body">
+        <ul>
+          <li>Forbered deg.</li>
+          <li>Bruk korte setninger og et klart og tydelig språk.</li>
+          <li>Ta hyppige pauser, så tolken får tid til å oversette.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h2 id="tolk-uten">Når kan jeg klare meg uten tolk?</h2>
+    <p>Hvis samtalen er viktig: bestill tolk. Ikke alle flerspråklige ønsker tolk, men det kan være lurt å si at <em>du</em> trenger tolk for å være sikker på at dere forstår hverandre.</p>
+    <div class="box box-warn">
+      <ul>
+        <li>Ikke bruk barn som tolk.</li>
+        <li>Ikke baser viktige beslutninger på at «det går sikkert fint».</li>
+        <li>Begge foreldre skal forstå informasjonen, ikke bare få den gjennom partneren.</li>
+      </ul>
+      <p>Dette gjelder særlig økonomi, bekymringer og avtaler.</p>
+    </div>
+
+    <h2 id="tolk-nav">Tolk hos NAV</h2>
+    <p>Familien kan bestille en time med tolk hos NAV. Se <a href="#okonomi-sprak">slik gjør du det i Økonomi og arbeid</a>.</p>
+
+    <h2 id="tolk-imdi">Mer om tolk hos IMDi</h2>
+    <p>IMDi har mye informasjon om tolking og et register over kvalifiserte tolker i Norge: <span class="deadlink ext">Om Nasjonalt tolkeregister</span>.</p>
+  </div>
+</section>
+
+<!-- ============ ØKONOMI ============ -->
+<section class="page" id="okonomi" data-title="Økonomi og arbeid" hidden>
+  <div class="wrap narrow">
+    <h1>Økonomi og arbeid</h1>
+    <p class="ingress">Når en familie trenger hjelp med økonomi eller arbeid, avklar først om foreldrene deltar i introduksjonsprogrammet ved Tønsberg læringssenter.</p>
+
+    <div class="box box-warn">
+      <p><strong>Står familien uten penger til mat?</strong> Da skal de søke nødhjelp direkte hos NAV, også om de er i introduksjonsprogrammet. Å gå via programveileder forsinker hjelpen.</p>
+    </div>
+
+    <p class="jumplabel">På denne siden</p>
+    <ul class="jump">
+      <li><a href="#okonomi-intro">Introprogram?</a></li>
+      <li><a href="#okonomi-utfordringer">Økonomiske utfordringer</a></li>
+      <li><a href="#okonomi-nav">Kontakte NAV</a></li>
+      <li><a href="#okonomi-sprak">NAV med tolk</a></li>
+    </ul>
+
+    <h2 id="okonomi-intro">Er foreldrene i introduksjonsprogrammet?</h2>
+    <p>Usikker? Se <a href="#fire-veier">hvilke familier som vanligvis har introprogram</a>.</p>
+    <div class="yn">
+      <div class="yes"><h3>Ja</h3>
+        <p>Hovedregelen er at familien først tar kontakt med sin veileder ved Tønsberg læringssenter. Veilederen kan:</p>
+        <ul>
+          <li>gi råd om økonomi og rettigheter</li>
+          <li>vurdere behov for bistand</li>
+          <li>hjelpe familien videre til riktig instans</li>
+          <li>bistå med søknader til NAV etter samarbeidsrutinene</li>
+        </ul></div>
+      <div class="no"><h3>Nei</h3>
+        <p>Mor eller far kan kontakte NAV direkte. Se <a href="#okonomi-nav">Hvordan kontakte NAV</a>, og eventuelt <a href="#okonomi-sprak">språkutfordringer</a>.</p></div>
+    </div>
+
+    <h2 id="okonomi-utfordringer">Når familien har økonomiske utfordringer</h2>
+    <p>Har familien problemer med å betale regninger, for eksempel barnehage, husleie eller andre nødvendige utgifter, kan det være aktuelt å søke økonomisk sosialhjelp fra NAV. Ved akutt behov for mat søker de om nødhjelp.</p>
+    <p>Som hovedregel krever NAV at begge foreldrene registrerer seg som arbeidssøkere, slik at de får oppfølging mot arbeid og selvforsørgelse.</p>
+    <p>Det finnes også flere økonomiske støtteordninger for barn og familier i kommunen, for eksempel Friskusordningen. <span class="deadlink ext">Oversikt over økonomiske støtteordninger (Teams-dokument)</span></p>
+    <p>Gjelder det barnehagebetaling? Se <a href="#barnehage-okonomi">redusert betaling og gratis kjernetid</a>. Familier med stram økonomi kan også søke <a href="#mote-ferie">ferietilbud</a>.</p>
+
+    <details class="acc">
+      <summary>Økonomikurs</summary>
+      <div class="acc-body">
+        <p>Familier kan få tilbud om et enkelt, frivillig økonomikurs. Kurset arrangeres av Færder kommune og kan noen ganger også tilbys innbyggere fra andre kommuner.</p>
+        <p><span class="deadlink ext">Les mer om økonomikurset</span></p>
+      </div>
+    </details>
+
+    <h2 id="okonomi-nav">Hvordan kontakte NAV</h2>
+    <p>NAV er inngangen både til økonomisk støtte og til hjelp med å få jobb.</p>
+    <div class="kort">
+      <h3>NAV kontaktsenter</h3>
+      <dl class="meta">
+        <dt>Telefon</dt><dd><span class="deadlink">55 55 33 33</span> (09.00–15.00)</dd>
+        <dt>Digitalt</dt><dd>Melding eller chat på <span class="deadlink ext">nav.no</span></dd>
+      </dl>
+      <p>Familien kan be om en enkel veiledningstime, og om tolk i møtet med NAV.</p>
+      <p>Ønsker familien regelmessig oppfølging mot arbeid, må de først registrere seg som arbeidssøkere på nav.no.</p>
+    </div>
+
+    <h2 id="okonomi-sprak">Språkutfordringer?</h2>
+    <p>Hjelper du en familie som ikke snakker godt norsk:</p>
+    <ol>
+      <li>Ring NAV kontaktsenter på <span class="deadlink">55 55 33 33</span>.</li>
+      <li>Be om samtale med tolk, og at timeavtalen sendes på SMS til familien.</li>
+    </ol>
+    <div class="box box-mint">
+      <p><strong>Vil du støtte familien i møtet?</strong> Be dem avtale å komme til deg når de får time med tolk.</p>
+    </div>
+    <p>Mer om tolk i <a href="#sprak-tolk">Språk og tolk</a>.</p>
+  </div>
+</section>
+
+<!-- ============ OPPHOLDSSTATUS ============ -->
+<section class="page" id="opphold" data-title="Oppholdsstatus og rettigheter" hidden>
+  <div class="wrap narrow">
+    <h1>Oppholdsstatus og rettigheter</h1>
+    <p class="ingress">Hvilke rettigheter og hvilken oppfølging en familie har, avhenger av hvordan de kom til Norge. Spør alltid: «Har dere en veileder? Eller er dere i introprogram på læringssenteret?»</p>
+    <div class="box box-mint"><p><strong>Kort oversikt først?</strong> <a href="#fire-veier">Fire veier til Tønsberg</a> viser de viktigste forskjellene på én side.</p></div>
+
+    <div class="box box-blue">
+      <p><strong>Viktig å vite:</strong> Ikke alle tidligere flyktninger eller personer med innvandrerbakgrunn har vært innom Tønsberg læringssenter. Familien du møter har derfor ikke nødvendigvis nok norskkunnskaper til å kommunisere, eller grunnleggende forståelse av det norske samfunnet og systemet.</p>
+    </div>
+
+    <p class="jumplabel">På denne siden</p>
+    <ul class="jump">
+      <li><a href="#opphold-intro">Introprogram</a></li>
+      <li><a href="#opphold-familie">Familiegjenforente</a></li>
+      <li><a href="#opphold-begreper">Begreper</a></li>
+      <li><a href="#opphold-hjelp">Juridisk hjelp</a></li>
+    </ul>
+
+    <h2 id="opphold-intro">Introduksjonsprogram og integreringsloven</h2>
+    <p>Flyktninger som bosettes i kommunen har rettigheter etter integreringsloven. Kommunen får hvert år en anmodning fra IMDi om hvor mange flyktninger som skal bosettes, og kommunestyret vedtar hvor mange som tas imot.</p>
+    <p>Når en flyktning bosettes i Tønsberg, får de oppfølging gjennom programveileder på introduksjonsprogrammet. Oppfølgingen ligger hos Inntak, arbeid og oppfølging (IAO) ved Tønsberg læringssenter.</p>
+    <p>Introduksjonsprogrammet er et heltidsprogram som skal bidra til overgang til arbeid eller utdanning. Programveilederen koordinerer ofte kontakten mellom deltakeren og andre tjenester, som NAV, helse, barnehage og bolig.</p>
+    <details class="acc">
+      <summary>Slik ser et typisk løp ut</summary>
+      <div class="acc-body">
+        <ul>
+          <li>Informasjonsmøter i starten («I gang») om økonomi, NAV, bolig, helse og veien til arbeid</li>
+          <li>Norskopplæring</li>
+          <li>Norsk og språkpraksis</li>
+          <li>Norsk og arbeidspraksis</li>
+          <li>Foreldreveiledning for de med barn under 18 år eller som er gravide</li>
+          <li>Livsmestring i nytt land (karrierekompetanse, helse, beredskap, økonomi, vold m.m.). Dette er obligatorisk for alle i introduksjonsprogrammet.</li>
+        </ul>
+      </div>
+    </details>
+    <p>Se også <a href="#bolig-nyankomne">hva nyankomne flyktninger får hjelp til ved bosetting</a>.</p>
+
+    <h2 id="opphold-familie">Familiegjenforente og andre som ikke følges opp</h2>
+    <p>Personer som kommer gjennom familiegjenforening kan ha rett til introduksjonsprogram, men må søke selv. Resepsjonen på Tønsberg læringssenter kan sjekke hva de har rett til og hjelpe med søknaden. Kommunen kan avslå søknaden.</p>
+    <p>Noen familier har for eksempel:</p>
+    <ul>
+      <li>flyttet hit fra en annen kommune</li>
+      <li>kommet til Norge gjennom arbeid</li>
+      <li>kommet gjennom familiegjenforening uten å delta i introduksjonsprogram</li>
+    </ul>
+    <div class="box box-yellow">
+      <p><strong>Da kan det hende at familien ikke blir fulgt opp av noen.</strong> Bruk <a href="#forste-mote">de fire viktige spørsmålene</a> for å finne ut hva som mangler.</p>
+    </div>
+
+    <h2 id="opphold-begreper">Begrepsavklaring</h2>
+    <p>Definisjoner fra <span class="deadlink ext">utlendingsloven</span>:</p>
+    <dl class="gloss">
+      <dt>Utlending</dt><dd>Hver person som ikke er norsk statsborger.</dd>
+      <dt>Flyktning</dt><dd>En utlending som søker om oppholdstillatelse.</dd>
+      <dt>Asylsøker</dt><dd>Person som søker om beskyttelse etter utlendingsloven kapittel 4.</dd>
+      <dt>Massefluktsituasjon</dt><dd>Utlendinger som får midlertidig oppholdstillatelse (kollektiv beskyttelse), for eksempel kurdere og ukrainere.</dd>
+      <dt>Overføringsflyktning</dt><dd>Utlendinger som kommer til Norge etter anmodning fra internasjonale organisasjoner som FNs høykommissær for flyktninger. De får innreisetillatelse og søker oppholdstillatelse som grunnlag for permanent opphold.</dd>
+    </dl>
+
+    <h2 id="opphold-hjelp">Hjelp med opphold, avslag og familiegjenforening</h2>
+    <ul class="linklist">
+      <li><span class="deadlink ext">SEIF – Selvhjelp for innvandrere og flyktninger</span></li>
+      <li><span class="deadlink ext">NOAS – Norsk organisasjon for asylsøkere</span></li>
+      <li><span class="deadlink ext">JURK – Juridisk rådgivning for kvinner</span></li>
+      <li><span class="deadlink ext">LIN – Likestilling, inkludering, nettverk</span></li>
+      <li><span class="deadlink ext">Advokatvakt på Tønsberg og Færder bibliotek</span></li>
+    </ul>
+    <p>Flere gratis rettshjelptilbud står under <a href="#krise-rettshjelp">Krisesituasjoner</a>.</p>
+
+    <div class="box box-blue related">
+      <h2>Finner du ikke svaret?</h2>
+      <p>Usikker på rettigheter eller status knyttet til opplæring for voksne? Kontakt Tønsberg læringssenter på <span class="deadlink">33 40 68 00</span>.</p>
+      <p><span class="deadlink ext">Flerkulturell.org</span> lar innvandrere stille spørsmål om rettigheter og regelverk anonymt og gratis, på flere språk.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOSETTING OG BOLIG ============ -->
+<section class="page" id="bolig" data-title="Bosetting og bolig" hidden>
+  <div class="wrap narrow">
+    <h1>Bosetting og bolig</h1>
+    <p class="ingress">Om familien får bolig og hjelp ved ankomst, avhenger av hvordan de kom til Norge.</p>
+    <p>Se forskjellene samlet i <a href="#fire-veier">Fire veier til Tønsberg</a>.</p>
+
+    <h2 id="bolig-nyankomne">Nyankomne flyktninger med introprogram</h2>
+    <p>Flyktninger som kommer til Tønsberg får egnet bolig ved ankomst. Dette er ofte private boliger som Tønsberg læringssenter har skaffet.</p>
+    <p>Nyankomne flyktninger får en kontaktperson som er veileder og kan hjelpe videre i systemet. De får hjelp med å kontakte politi, helse og skole for barna, og får søkt barnehageplass.</p>
+    <p>Les mer om <a href="#opphold-intro">introduksjonsprogrammet</a> eller <span class="deadlink ext">Tønsberg læringssenter (Teams-dokument)</span>.</p>
+
+    <h2 id="bolig-andre">Familiegjenforente og arbeidsinnvandrere</h2>
+    <p>Ved familiegjenforening må den som henter familien til Norge skaffe bolig selv på det private markedet. Det samme gjelder arbeidsinnvandrere.</p>
+    <p>De må også selv kontakte politi, helse, barnehage og skole. Det kan være vanskelig med lite nettverk og begrensede norskferdigheter.</p>
+    <div class="box box-mint">
+      <p><strong>Minn familien på at alle offentlige instanser har plikt til å bruke tolk.</strong> Se <a href="#sprak-tolk">Språk og tolk</a> og <span class="deadlink ext">brosjyre på 25 språk om rett til tolk i helsetjenesten</span>.</p>
+    </div>
+
+    <h2 id="bolig-hjelp">Trenger familien hjelp med å skaffe bolig?</h2>
+    <div class="kort">
+      <h3>Kommunal bolig</h3>
+      <p>Tønsberg kommunale eiendom (TKE) har boliger for mange målgrupper som av ulike grunner ikke klarer å skaffe bolig selv. Det er ikke et eget tilbud for innvandrere.</p>
+      <p><span class="deadlink ext">Søke kommunal bolig</span></p>
+    </div>
+    <div class="kort">
+      <h3>Bo-team – Kirkens Bymisjon</h3>
+      <p>Kan hjelpe med for eksempel visninger og avtaler med private utleiere.</p>
+      <p><span class="deadlink ext">Kontakt Bo-team</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MØTEPLASSER ============ -->
+<section class="page" id="moteplasser" data-title="Møteplasser og aktivitet" hidden>
+  <div class="wrap narrow">
+    <h1>Møteplasser og aktivitet</h1>
+    <p class="ingress">Gratis møteplasser og aktiviteter der familier kan bygge nettverk, øve norsk og finne noe å gjøre sammen med barna.</p>
+    <div class="box box-yellow">
+      <p><strong>De fleste aktørene her er frivillige,</strong> og tilbudene endrer seg ofte. Sjekk lenken til hver aktør for å se hva som er aktivt nå. Finner du noe som er feil eller utdatert, svar «Nei» nederst på siden og skriv hva som er feil.</p>
+    </div>
+
+    <p class="jumplabel">På denne siden</p>
+    <ul class="jump">
+      <li><a href="#mote-baby">Hjemme med baby</a></li>
+      <li><a href="#mote-familie">Barn og familie</a></li>
+      <li><a href="#mote-ungdom">Ungdom</a></li>
+      <li><a href="#mote-voksne">Voksne og språk</a></li>
+      <li><a href="#mote-ferie">Ferie</a></li>
+    </ul>
+
+    <h2 id="mote-baby">Hjemme med baby eller små barn</h2>
+    <div class="kort">
+      <h3>Barselgruppe for deg som vil lære mer norsk – Familiehuset</h3>
+      <p>Mammagruppe for mødre med norsk som andrespråk og lite nettverk. To ansatte og en lærer fra Læringssenteret har ansvar for gruppa.</p>
+      <dl class="meta"><dt>Når</dt><dd>Tirsdager 09.00–11.30</dd><dt>Kontakt</dt><dd>Kari Misfjord</dd></dl>
+      <p><span class="deadlink ext">Les om barselgruppa</span></p>
+    </div>
+    <div class="kort">
+      <h3>Åpen barnehage i Tønsberg sentrum</h3>
+      <p>For barn som ikke har barnehageplass. En omsorgsperson er sammen med barnet. Følger skolens ferier.</p>
+      <dl class="meta"><dt>Når</dt><dd>Mandag og onsdag 09–15</dd></dl>
+      <p><span class="deadlink ext">Les om åpen barnehage</span> · Se også <a href="#barnehage">Barnehage</a></p>
+    </div>
+    <div class="kort">
+      <h3>Babysang og småbarnssang</h3>
+      <p>Biblioteket og Den norske kirke arrangerer babysang (0–1 år) og småbarnssang (1–3 år) på Revetal bibliotek. Gratis og uten påmelding.</p>
+      <p><strong>Bruk når:</strong> foreldre i permisjon ønsker sosialt fellesskap og sang og lek med barnet.</p>
+      <dl class="meta"><dt>Når</dt><dd>Torsdager 11.00, Revetal bibliotek</dd></dl>
+      <p><span class="deadlink ext">Småbarnssang på re.kirken.no</span></p>
+    </div>
+    <div class="kort">
+      <h3>Home-Start Familiekontakten – Frelsesarmeen</h3>
+      <p>Frivillige familiekontakter besøker småbarnsfamilier med minst ett barn under skolealder, 2–4 timer i uka i ca. 6 måneder. Praktisk støtte tilpasset familien, gratis.</p>
+      <p><strong>Bruk når:</strong> småbarnsfamilier trenger støtte og avlastning i en utfordrende periode.</p>
+      <dl class="meta"><dt>Telefon</dt><dd><span class="deadlink">406 32 282</span> (koordinator)</dd><dt>E-post</dt><dd>home-start.tonsberg@frelsesarmeen.no</dd></dl>
+      <p><span class="deadlink ext">Home-Start Tønsberg</span></p>
+    </div>
+
+    <h2 id="mote-familie">Barn og familie</h2>
+    <div class="kort">
+      <h3>Åpen møteplass – Læringssenteret og Kirkens Bymisjon</h3>
+      <p>Arrangeres 4 ganger i året hos Kirkens Bymisjon, spesielt for foreldre og barn ved Læringssenteret og nyankomne. Ingen påmelding, det serveres mat. Datoene markedsføres via Læringssenteret.</p>
+      <dl class="meta"><dt>Kontakt</dt><dd>Kari Misfjord</dd></dl>
+    </div>
+    <div class="kort">
+      <h3>Fritidshuset – Kirkens Bymisjon</h3>
+      <p>Gratis fritidsaktiviteter, kreative verksteder og turer i trygge omgivelser. Har egen juniorklubb og gamingklubb.</p>
+      <p><strong>Bruk når:</strong> familier med barn og ungdom trenger et varmt, inkluderende sted å være, gratis aktiviteter eller å møte andre.</p>
+      <dl class="meta"><dt>Telefon</dt><dd><span class="deadlink">474 54 472</span> (Amir Kanaan)</dd></dl>
+      <p><span class="deadlink ext">Fritidshuset på kirkensbymisjon.no</span></p>
+    </div>
+    <div class="kort">
+      <h3>Skattekammeret – utlån av sports- og fritidsutstyr</h3>
+      <p>Gratis utlån av ski, skøyter, telt, festantrekk og annet utstyr for alle aldre.</p>
+      <dl class="meta"><dt>Når</dt><dd>Mandag–torsdag 15–18</dd><dt>Telefon</dt><dd><span class="deadlink">457 29 693</span> (Marita Nythe Zeylon)</dd></dl>
+      <p><span class="deadlink ext">Om Skattekammeret</span></p>
+    </div>
+    <div class="kort">
+      <h3>Tønsberg og Færder bibliotek</h3>
+      <p>Et sosialt møtested. Lån bøker, bruk PC og grupperom, besøk barneavdelingen med flerspråklige bøker, spill i gamingrommet eller møt andre i kafeen. E-bøker, tegneserier, filmer og aviser på flere språk, og norskkurs på nett.</p>
+      <p>Språkfrokost hver tirsdag i regi av Frivillighetssentralen Færder. Avdeling Re har også språkkafé og babysang.</p>
+      <dl class="meta"><dt>Telefon</dt><dd><span class="deadlink">33 34 86 20</span></dd></dl>
+      <p><span class="deadlink ext">tnb.no</span> · <span class="deadlink ext">Språkfrokost</span></p>
+    </div>
+    <div class="kort">
+      <h3>Speidergrupper – Vestfold krets</h3>
+      <p>Friluftsliv, vennskap og mestring for barn og ungdom. Tønsberg speidergruppe tar inn barn fra 2. klasse og møtes torsdager 18.00–19.30 ved Byskogen skole. Eik speidergruppe møtes mandager 18.00 på speiderhuset «Gullstua».</p>
+      <dl class="meta"><dt>Telefon</dt><dd><span class="deadlink">33 34 58 16</span> (kretskontoret finner riktig gruppe)</dd></dl>
+      <p><span class="deadlink ext">vestfoldspeiderne.no</span></p>
+    </div>
+
+    <h2 id="mote-ungdom">Ungdom</h2>
+    <div class="kort">
+      <h3>Fellesverket – Røde Kors sitt ungdomshus</h3>
+      <p>Gratis mat, biljard, bordtennis, Playstation, musikkstudio og hjelp til å søke jobb. For ungdom 13–19 år.</p>
+      <dl class="meta"><dt>Når</dt><dd>Mandag og onsdag 15–19</dd><dt>Telefon</dt><dd><span class="deadlink">904 07 293</span> (senterleder Ina Merkesdal)</dd></dl>
+      <p><span class="deadlink ext">Fellesverket Tønsberg</span></p>
+    </div>
+    <div class="kort">
+      <h3>Gamingklubb – Fritidshuset</h3>
+      <p>Data- og konsollspill i trygge omgivelser. Kontakt via <a href="#mote-familie">Fritidshuset</a>.</p>
+    </div>
+
+    <h2 id="mote-voksne">Voksne og språk – Røde Kors internasjonal møteplass</h2>
+    <div class="kort">
+      <h3>Språk- og aktivitetskafé for voksne innvandrere</h3>
+      <dl class="meta">
+        <dt>Mandag</dt><dd>Kvinnegruppe 11–14</dd>
+        <dt>Tirsdag</dt><dd>Kvinner og barn 11–13.30</dd>
+        <dt>Onsdag</dt><dd>Mannsgruppe 15–17</dd>
+        <dt>Torsdag</dt><dd>Kvinnegruppe 12–15</dd>
+      </dl>
+      <p>Røde Kors har også leksehjelp mandag og torsdag 16–18, og gatemegling (konfliktforebyggende kurs for ungdom).</p>
+      <p><strong>Bruk når:</strong> innvandrere vil øve norsk, trenger hjelp med CV eller lekser, eller trenger nettverk.</p>
+      <dl class="meta"><dt>Språkkafé</dt><dd>sprakkafe@tonsbergrk.no</dd><dt>Leksehjelp</dt><dd>leksehjelp@tonsbergrk.no</dd></dl>
+      <p><span class="deadlink ext">Røde Kors migrasjonsaktiviteter på Facebook</span></p>
+    </div>
+
+    <h2 id="mote-ferie">Ferie for familier med stram økonomi</h2>
+    <div class="kort">
+      <h3>Røde Kors Ferie for alle</h3>
+      <p>For familier med stram økonomi som har bodd i Norge i mer enn 3 år. Det må være en hjelpeinstans som søker.</p>
+      <p><span class="deadlink ext">Slik søker du ferieopphold</span></p>
+    </div>
+    <div class="kort">
+      <h3>Blå Kors ferier</h3>
+      <p>Familiene søker selv. Det går også an å søke om for eksempel selvstendige opphold på campingplass, mange i nærområdet.</p>
+      <p><span class="deadlink ext">Aktuelle ferietilbud</span></p>
+    </div>
+    <p>Trenger familien mer økonomisk hjelp? Se <a href="#okonomi">Økonomi og arbeid</a>.</p>
+  </div>
+</section>
+
+<!-- ============ KRISE ============ -->
+<section class="page" id="krise" data-title="Krisesituasjoner" hidden>
+  <div class="wrap narrow">
+    <h1>Krisesituasjoner</h1>
+    <p class="ingress">Noen familier havner i situasjoner der de trenger rask hjelp utenfor de vanlige tjenestene. Din rolle er å fange opp bekymring og hjelpe familien videre til riktig sted, ikke å håndtere krisen alene.</p>
+
+    <div class="numbers">
+      <div><b>113</b><span>Fare for liv og helse</span></div>
+      <div><b>116 117</b><span>Legevakt – hjelp som ikke kan vente til neste dag</span></div>
+      <div><b>33 35 91 91</b><span>Krisesenteret i Vestfold, døgnåpent</span></div>
+    </div>
+
+    <h2 id="krise-akutt">Akutt krise</h2>
+    <div class="kort">
+      <h3>Krisesenteret i Vestfold</h3>
+      <p>Støtte ved vold i nære relasjoner. Gratis, døgnåpent, uten henvisning, og man kan være anonym. Har bo- og beskyttelsestilbud i akutte situasjoner.</p>
+      <p><strong>Bruk når:</strong> det kan være vold eller utrygghet i hjemmet.</p>
+      <dl class="meta"><dt>Telefon</dt><dd><span class="deadlink">33 35 91 91</span></dd></dl>
+      <p><span class="deadlink ext">Krisesenteret i Vestfold</span></p>
+    </div>
+    <div class="kort">
+      <h3>Oslo krisesenter – informasjon på mange språk</h3>
+      <p><strong>Bruk når:</strong> familien trenger informasjon på eget språk om vold i nære relasjoner, rettigheter og hjelp.</p>
+      <p><span class="deadlink ext">Oslo krisesenter</span></p>
+    </div>
+    <div class="kort">
+      <h3>TryggEst</h3>
+      <p>Kommunens tilbud for å forebygge, avdekke og håndtere vold og overgrep mot voksne i sårbare livssituasjoner. Brosjyren kan skrives ut fra nettsiden.</p>
+      <p><strong>Bruk når:</strong> du er bekymret for vold, overgrep eller utnyttelse av en voksen.</p>
+      <p><span class="deadlink ext">TryggEst – Tønsberg kommune</span></p>
+    </div>
+    <div class="kort">
+      <h3>Psykisk helsetilbud – Tønsberg kommune</h3>
+      <p><strong>Bruk når:</strong> noen i familien strever psykisk og trenger hjelp eller veiledning.</p>
+      <dl class="meta"><dt>Telefon</dt><dd><span class="deadlink">33 34 82 40</span></dd></dl>
+      <p><span class="deadlink ext">Psykisk helsetilbud</span></p>
+    </div>
+    <div class="kort">
+      <h3>Familievernkontoret</h3>
+      <p>Hjelp ved samlivsproblemer, brudd og skilsmisse, og høy konflikt mellom foreldre.</p>
+      <p><strong>Bruk når:</strong> foreldre trenger hjelp til å samarbeide om barna eller støtte i parforholdet.</p>
+      <dl class="meta"><dt>Telefon</dt><dd><span class="deadlink">466 18 180</span></dd></dl>
+      <p><span class="deadlink ext">Familievernkontoret Vestfold</span></p>
+    </div>
+
+    <h2 id="krise-rettshjelp">Juridisk hjelp</h2>
+    <div class="kort">
+      <h3>JURK – Juridisk rådgivning for kvinner</h3>
+      <p>Gratis juridisk rådgivning for kvinner, for eksempel ved samlivsbrudd, vold eller spørsmål om rettigheter.</p>
+      <p><span class="deadlink ext">JURK</span></p>
+    </div>
+    <div class="kort">
+      <h3>Gratis rettshjelp fra jusstudenter</h3>
+      <p><strong>Bruk når:</strong> en av foreldrene ikke får gehør for sine rettigheter ved samlivsbrudd, har spørsmål om opphold, eller andre juridiske spørsmål.</p>
+      <dl class="meta">
+        <dt>Jussbuss (Oslo)</dt><dd><span class="deadlink">22 84 29 00</span> · <span class="deadlink ext">Nettside</span></dd>
+        <dt>Jussformidlingen (Bergen)</dt><dd><span class="deadlink">55 58 96 00</span> · <span class="deadlink ext">Nettside</span></dd>
+      </dl>
+    </div>
+    <p>Hjelp med opphold og familiegjenforening: se <a href="#opphold-hjelp">Oppholdsstatus og rettigheter</a>.</p>
+
+    <h2 id="krise-forebyggende">Forebyggende</h2>
+    <div class="kort">
+      <h3>Egenberedskap for samfunnskriser</h3>
+      <p>Råd om å være forberedt på det uforutsigbare, på flere språk.</p>
+      <p><span class="deadlink ext">Egenberedskap på flere språk (DSB)</span></p>
+    </div>
+    <div class="kort">
+      <h3>Informasjon til selvhjelp – RVTS flyktningbrosjyrer</h3>
+      <p>Noen kriser stammer fra tidligere opplevelser i krig og på flukt. Brosjyrer og videoer på morsmålet kan hjelpe personen som trenger det.</p>
+      <p><span class="deadlink ext">RVTS flyktningbrosjyrer</span></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ FIRE VEIER ============ -->
+<section class="page" id="fire-veier" data-title="Fire veier til Tønsberg" hidden>
+  <div class="wrap">
+    <div class="narrow">
+      <h1>Fire veier til Tønsberg</h1>
+      <p class="ingress">Hvordan familien kom til Norge påvirker hvem som følger dem opp, hvor de bor og hva de har rett på. To familier som ser like ut, kan ha helt ulike forutsetninger.</p>
+      <p>Eksemplene under viser typiske forskjeller. De sier ikke hva den enkelte familien har rett på. Det må vurderes av de som har ansvaret, se <a href="#veier-avklare">hvem som kan hjelpe</a>.</p>
+    </div>
+
+    <div class="veier" role="list">
+      <article class="vei" role="listitem" id="vei-flyktning">
+        <header><span class="vei-n">1</span><h2>Nyankommet flyktning</h2></header>
+        <dl>
+          <dt>Hvordan kom de?</dt><dd>Har fått beskyttelse i Norge og er bosatt i Tønsberg etter avtale mellom IMDi og kommunen.</dd>
+          <dt>Hvem følger opp?</dt><dd>Har som regel en programveileder ved Tønsberg læringssenter de første årene.</dd>
+          <dt>Bolig</dt><dd>Får hjelp til bolig når de kommer.</dd>
+          <dt>Norsk og introprogram</dt><dd>Har som regel både rett og plikt til introduksjonsprogram og norskopplæring.</dd>
+          <dt class="pit">Typisk fallgruve</dt><dd class="pit">Andre tjenester tror veilederen tar seg av alt. Når programmet er ferdig, står familien plutselig mye mer alene.</dd>
+        </dl>
+      </article>
+      <article class="vei" role="listitem" id="vei-familie">
+        <header><span class="vei-n">2</span><h2>Familiegjenforent</h2></header>
+        <dl>
+          <dt>Hvordan kom de?</dt><dd>Kom til et familiemedlem som allerede bor i Norge, for eksempel en ektefelle som kom som flyktning.</dd>
+          <dt>Hvem følger opp?</dt><dd>Ofte ingen fast kontaktperson i kommunen.</dd>
+          <dt>Bolig</dt><dd>Familien skaffer bolig selv, som regel på det private markedet.</dd>
+          <dt>Norsk og introprogram</dt><dd>Kan for eksempel ha rett til introprogram, men må ofte søke selv. Det er frister.</dd>
+          <dt class="pit">Typisk fallgruve</dt><dd class="pit">Ingen i kommunen vet at familien er kommet. De kjenner ikke tilbudene og søker for sent, eller ikke i det hele tatt.</dd>
+        </dl>
+      </article>
+      <article class="vei" role="listitem" id="vei-flyttet">
+        <header><span class="vei-n">3</span><h2>Flyttet fra en annen kommune</h2></header>
+        <dl>
+          <dt>Hvordan kom de?</dt><dd>Ble først bosatt et annet sted i Norge, og har selv flyttet til Tønsberg.</dd>
+          <dt>Hvem følger opp?</dt><dd>Oppfølgingen blir ofte igjen i den gamle kommunen.</dd>
+          <dt>Bolig</dt><dd>Skaffer bolig selv.</dd>
+          <dt>Norsk og introprogram</dt><dd>Kan for eksempel ha et program som ikke er fullført, eller ha mistet tilbud ved flyttingen.</dd>
+          <dt class="pit">Typisk fallgruve</dt><dd class="pit">Familien virker etablert, men oppfølgingen har stoppet opp. Vedtak og papirer ligger i en annen kommune.</dd>
+        </dl>
+      </article>
+      <article class="vei" role="listitem" id="vei-arbeid">
+        <header><span class="vei-n">4</span><h2>Arbeidsinnvandrer</h2></header>
+        <dl>
+          <dt>Hvordan kom de?</dt><dd>Kom for å jobbe, for eksempel fra et EU/EØS-land. Familien kan ha kommet samtidig eller senere.</dd>
+          <dt>Hvem følger opp?</dt><dd>Ingen oppfølging fra kommunen knyttet til innvandringen.</dd>
+          <dt>Bolig</dt><dd>Skaffer bolig selv, noen ganger gjennom arbeidsgiver.</dd>
+          <dt>Norsk og introprogram</dt><dd>Har som regel ikke rett til introprogram eller gratis norskopplæring.</dd>
+          <dt class="pit">Typisk fallgruve</dt><dd class="pit">Den som jobber, klarer seg ofte. Den som er hjemme med små barn, kan bli isolert uten norsk og nettverk.</dd>
+        </dl>
+      </article>
+    </div>
+
+    <div class="narrow">
+      <div class="box box-yellow">
+        <h2>Én familie kan ha flere veier</h2>
+        <p>Far kan ha kommet som flyktning og mor gjennom familiegjenforening. Da kan foreldrene ha ulik oppfølging og ulike rettigheter. Status kan også endre seg over tid.</p>
+      </div>
+
+      <h2 id="veier-sporsmal">Slik finner du ut hvilken vei familien kom</h2>
+      <p>Du trenger ikke spørre om oppholdsstatus. Spør heller:</p>
+      <ul>
+        <li>«Hvor lenge har dere bodd i Norge? Og i Tønsberg?»</li>
+        <li>«Har dere en veileder eller kontaktperson i kommunen?»</li>
+        <li>«Går dere på norskkurs eller introduksjonsprogram?»</li>
+      </ul>
+      <p>Svarene gir som regel nok til å vite hvem du bør henvise til. Bruk gjerne <a href="#forste-mote">de fire viktige spørsmålene</a>.</p>
+
+      <h2 id="veier-avklare">Usikker på hva familien har rett på? Henvis videre</h2>
+      <p>Du skal ikke vurdere rettigheter selv. Disse kan hjelpe familien med å finne ut av det:</p>
+      <div class="kort">
+        <h3>Tønsberg læringssenter, resepsjonen</h3>
+        <p><strong>Bruk når:</strong> familien er usikker på rett til introprogram eller norskopplæring.</p>
+        <dl class="meta"><dt>Telefon</dt><dd>33 40 68 00</dd><dt>Adresse</dt><dd>Grenaderveien 11, 3122 Tønsberg</dd></dl>
+      </div>
+      <div class="kort">
+        <h3>NAV</h3>
+        <p><strong>Bruk når:</strong> spørsmålet gjelder økonomi, arbeid eller ytelser. Se <a href="#okonomi-nav">Hvordan kontakte NAV</a>.</p>
+      </div>
+      <div class="kort">
+        <h3>Flerkulturell.org</h3>
+        <p><strong>Bruk når:</strong> familien vil spørre anonymt om rettigheter og regelverk, på eget språk.</p>
+        <p><span class="deadlink ext">flerkulturell.org</span></p>
+      </div>
+      <div class="kort">
+        <h3>Juridisk hjelp</h3>
+        <p><strong>Bruk når:</strong> spørsmålet gjelder opphold, avslag eller familiegjenforening. Se <a href="#opphold-hjelp">gratis juridisk hjelp</a>.</p>
+      </div>
+      <p>Vil du vite mer om begrepene? Se <a href="#opphold-begreper">Oppholdsstatus og rettigheter</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR DEG I BARNEHAGEN ============ -->
+<section class="page" id="fag-barnehage" data-title="For deg i barnehagen" hidden>
+  <div class="wrap narrow">
+    <p class="eyebrow">Verktøy for ditt fag</p>
+    <h1>For deg i barnehagen</h1>
+    <p class="ingress">Verktøy og fagressurser for deg som tar imot flerspråklige barn og foreldre i barnehagen.</p>
+    <p>Vil du forklare familien hvordan barnehagen fungerer, med søknad og betaling? Se <a href="#barnehage">Barnehage</a>.</p>
+    <p class="jumplabel">På denne siden</p>
+    <ul class="jump">
+      <li><a href="#fb-samtale">Samtalen med foreldrene</a></li>
+      <li><a href="#fb-sprak">Språk</a></li>
+      <li><a href="#fb-kompetanse">Kompetanse</a></li>
+      <li><a href="#fb-sporre">Spør en kollega</a></li>
+    </ul>
+
+    <h2 id="fb-samtale">Samtalen med foreldrene</h2>
+    <div class="kort">
+      <h3>Oppstartssamtale med flerspråklige foreldre</h3>
+      <p>Mal med spørsmål om barnets språk, vaner, mat, søvn og hva foreldrene forventer av barnehagen. Laget av barnehagene i Tønsberg.</p>
+      <p><strong>Bruk når:</strong> barnet skal begynne i barnehagen.</p>
+      <p><span class="tag">Mal</span><span class="deadlink ext">Mal for oppstartssamtale (Teams)</span></p>
+    </div>
+    <div class="kort">
+      <h3>Sjekkliste: foreldresamtale med tolk</h3>
+      <p>Hva du gjør før, under og etter samtalen. Bestill tolk tidlig, spesielt til utviklingssamtaler og samtaler om bekymring.</p>
+      <p><span class="tag">Sjekkliste</span><span class="deadlink ext">Sjekkliste tolkesamtale (Teams)</span> · Se også <a href="#sprak-tolk">Språk og tolk</a></p>
+    </div>
+    <div class="kort">
+      <h3>Informasjon om barnehagen på flere språk</h3>
+      <p>Utdanningsdirektoratet har informasjon om hva barnehagen er og hva foreldre kan forvente, på mange språk.</p>
+      <p><span class="tag">Brosjyre</span><span class="deadlink ext">Informasjon til foreldre (udir.no)</span></p>
+    </div>
+
+    <h2 id="fb-sprak">Språk</h2>
+    <div class="kort">
+      <h3>Tema morsmål</h3>
+      <p>Materiell, fagtekster og aktiviteter på mange språk, til bruk i barnehagen og hjemme. Drives av NAFO.</p>
+      <p><strong>Bruk når:</strong> du vil støtte morsmålet og gi foreldrene noe å bruke hjemme.</p>
+      <p><span class="deadlink ext">morsmal.no</span></p>
+    </div>
+    <div class="kort">
+      <h3>Språkløyper</h3>
+      <p>Kompetansepakke om språk, lesing og skriving i barnehagen, med eget innhold om flerspråklige barn.</p>
+      <p><span class="tag">Kompetansepakke</span><span class="deadlink ext">Språkløyper (udir.no)</span></p>
+    </div>
+    <div class="box box-mint">
+      <p><strong>Husk ved observasjon av språk:</strong> Et barn som lærer norsk som andrespråk, skal ikke vurderes som om norsk er morsmålet. Spør foreldrene hvordan barnet bruker morsmålet hjemme.</p>
+    </div>
+
+    <h2 id="fb-kompetanse">Kompetanse og fagstøtte</h2>
+    <div class="kort">
+      <h3>NAFO – Nasjonalt senter for flerkulturell opplæring</h3>
+      <p>Kurs, nettressurser og veiledning om flerspråklige barn i barnehagen.</p>
+      <p><span class="deadlink ext">nafo.oslomet.no</span></p>
+    </div>
+    <div class="kort">
+      <h3>RVTS Sør – traumebevisst omsorg</h3>
+      <p>Kurs og materiell om barn som har opplevd krig, flukt eller andre belastninger.</p>
+      <p><strong>Bruk når:</strong> du er usikker på hvordan du møter et barn med uro, tilbaketrekning eller sterke reaksjoner.</p>
+      <p><span class="deadlink ext">rvtssor.no</span></p>
+    </div>
+
+    <h2 id="fb-sporre">Spør en kollega</h2>
+    <div class="kort">
+      <h3>Rådgiver for flerspråklige barn i barnehage</h3>
+      <p>Kan hjelpe med spørsmål om oppstart, språk og samarbeid med foreldrene.</p>
+      <dl class="meta"><dt>Kontakt</dt><dd>Melissa Seierstad</dd><dt>Telefon</dt><dd>909 43 344</dd></dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR DEG PÅ HELSESTASJONEN ============ -->
+<section class="page" id="fag-helsestasjon" data-title="For deg på helsestasjonen" hidden>
+  <div class="wrap narrow">
+    <p class="eyebrow">Verktøy for ditt fag</p>
+    <h1>For deg på helsestasjonen</h1>
+    <p class="ingress">Verktøy og fagressurser for helsesykepleiere, jordmødre og andre som følger opp flerspråklige familier med barn 0–5 år.</p>
+    <p>Vil du forklare familien hvordan helsetjenesten fungerer? Se <a href="#helse">Helse og helsestasjon</a>.</p>
+    <p class="jumplabel">På denne siden</p>
+    <ul class="jump">
+      <li><a href="#fh-samtale">Konsultasjonen</a></li>
+      <li><a href="#fh-veiledere">Faglige veiledere</a></li>
+      <li><a href="#fh-sarbare">Sårbare tema</a></li>
+      <li><a href="#fh-sporre">Spør en kollega</a></li>
+    </ul>
+
+    <h2 id="fh-samtale">Konsultasjonen</h2>
+    <div class="kort">
+      <h3>Tolk i helsetjenesten</h3>
+      <p>Brosjyre på 25 språk om retten til tolk. Fin å gi familien ved første konsultasjon.</p>
+      <p><span class="tag">Brosjyre</span><span class="deadlink ext">Tolk for deg som er pasient (helsedirektoratet.no)</span> · Se også <a href="#sprak-tolk">Språk og tolk</a></p>
+    </div>
+    <div class="kort">
+      <h3>Vaksineinformasjon på flere språk</h3>
+      <p>Folkehelseinstituttet har informasjon om barnevaksinasjonsprogrammet på mange språk.</p>
+      <p><strong>Bruk når:</strong> foreldrene er usikre på vaksiner, eller barnet har vaksiner fra et annet land.</p>
+      <p><span class="deadlink ext">Vaksineinformasjon (fhi.no)</span></p>
+    </div>
+    <div class="kort">
+      <h3>Hjemmebesøk med tolk – lokal rutine</h3>
+      <p>Hvordan helsestasjonene i Tønsberg planlegger hjemmebesøk med skjermtolk eller telefontolk.</p>
+      <p><span class="tag">Rutine</span><span class="deadlink ext">Rutine hjemmebesøk (Teams)</span></p>
+    </div>
+
+    <h2 id="fh-veiledere">Faglige veiledere</h2>
+    <div class="kort">
+      <h3>Nasjonal faglig retningslinje for helsestasjon 0–5 år</h3>
+      <p>Har egne anbefalinger om barn og foreldre med innvandrerbakgrunn, blant annet om tolk og helseopplysninger.</p>
+      <p><span class="deadlink ext">helsedirektoratet.no</span></p>
+    </div>
+    <div class="kort">
+      <h3>Helsetjenester til asylsøkere, flyktninger og familiegjenforente</h3>
+      <p>Veileder fra Helsedirektoratet om helsekartlegging, smittevern og oppfølging etter ankomst.</p>
+      <p><span class="deadlink ext">helsedirektoratet.no</span></p>
+    </div>
+
+    <h2 id="fh-sarbare">Sårbare tema</h2>
+    <div class="kort">
+      <h3>Kjønnslemlestelse</h3>
+      <p>Hvordan du tar opp temaet, og hva du gjør ved bekymring. RVTS Sør har regional kompetanse og veiledning.</p>
+      <p><strong>Bruk når:</strong> familien kommer fra et land der kjønnslemlestelse er utbredt.</p>
+      <p><span class="deadlink ext">RVTS Sør</span></p>
+    </div>
+    <div class="kort">
+      <h3>ICDP – foreldreveiledning</h3>
+      <p>Gruppeveiledning for foreldre, også med tolk og på flere språk. Flyktninger i introprogram får ofte tilbud gjennom læringssenteret.</p>
+      <p><span class="deadlink ext">ICDP (bufdir.no)</span></p>
+    </div>
+    <p>Bekymring for vold eller psykisk helse? Se <a href="#krise">Krisesituasjoner</a>.</p>
+
+    <h2 id="fh-sporre">Spør en kollega</h2>
+    <div class="kort">
+      <h3>Helsesykepleier for flyktninghelse</h3>
+      <p>Sitter ved Tønsberg fastlegekontor og møter nyankomne familier først. Kan svare på hva som er gjort ved ankomst.</p>
+      <dl class="meta"><dt>Telefon</dt><dd>33 29 25 99</dd></dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR DEG I SKOLEN ============ -->
+<section class="page" id="fag-skole" data-title="For deg i skolen" hidden>
+  <div class="wrap narrow">
+    <p class="eyebrow">Verktøy for ditt fag</p>
+    <h1>For deg i skolen</h1>
+    <p class="ingress">Verktøy og fagressurser for deg som tar imot flerspråklige elever, eller møter søsken og foreldre til små barn i skolen.</p>
+    <p class="jumplabel">På denne siden</p>
+    <ul class="jump">
+      <li><a href="#fs-start">Skolestart</a></li>
+      <li><a href="#fs-sprak">Språkopplæring</a></li>
+      <li><a href="#fs-kompetanse">Kompetanse</a></li>
+      <li><a href="#fs-sporre">Spør en kollega</a></li>
+    </ul>
+
+    <h2 id="fs-start">Skolestart og samarbeid med foreldrene</h2>
+    <div class="kort">
+      <h3>Overgang barnehage–skole for flerspråklige barn</h3>
+      <p>Lokal rutine for hva barnehagen og skolen deler, og når foreldrene skal ha samtale med tolk.</p>
+      <p><span class="tag">Rutine</span><span class="deadlink ext">Overgangsrutine (Teams)</span></p>
+    </div>
+    <div class="kort">
+      <h3>Skolen i Norge – informasjon til foreldre</h3>
+      <p>Informasjon på flere språk om hvordan skolen fungerer, hva foreldre forventes å gjøre, og hvordan de kan følge opp hjemme.</p>
+      <p><span class="tag">Brosjyre</span><span class="deadlink ext">Informasjon til foreldre (udir.no)</span></p>
+    </div>
+    <div class="kort">
+      <h3>Nyankomne elever</h3>
+      <p>Elever som er nye i Norge kan få et eget innføringstilbud den første tiden. Ta kontakt før eleven begynner.</p>
+      <dl class="meta"><dt>Kontakt</dt><dd>Skolekontoret, sentralbord 33 40 60 00</dd></dl>
+    </div>
+
+    <h2 id="fs-sprak">Språkopplæring</h2>
+    <div class="kort">
+      <h3>Særskilt språkopplæring</h3>
+      <p>Elever med annet morsmål enn norsk kan ha rett til særskilt norskopplæring, og ved behov morsmålsopplæring eller tospråklig fagopplæring. Skolen kartlegger norskferdighetene før vedtak.</p>
+      <p><span class="deadlink ext">Særskilt språkopplæring (udir.no)</span></p>
+    </div>
+    <div class="kort">
+      <h3>Tema morsmål</h3>
+      <p>Fagtekster og ressurser på mange språk til tospråklig opplæring.</p>
+      <p><span class="deadlink ext">morsmal.no</span></p>
+    </div>
+    <div class="box box-mint">
+      <p><strong>Språk eller vansker?</strong> Det tar flere år å lære et nytt skolespråk. Snakk med PPT før du konkluderer med lærevansker.</p>
+    </div>
+
+    <h2 id="fs-kompetanse">Kompetanse og fagstøtte</h2>
+    <div class="kort">
+      <h3>NAFO – Nasjonalt senter for flerkulturell opplæring</h3>
+      <p>Kurs og ressurser om flerspråklige elever og tospråklig opplæring.</p>
+      <p><span class="deadlink ext">nafo.oslomet.no</span></p>
+    </div>
+    <div class="kort">
+      <h3>RVTS Sør – traumebevisst skole</h3>
+      <p>Hvordan skolen kan møte elever som har opplevd krig og flukt.</p>
+      <p><span class="deadlink ext">rvtssor.no</span></p>
+    </div>
+    <div class="kort">
+      <h3>Leksehjelp</h3>
+      <p>Røde Kors har gratis leksehjelp to dager i uka. Se <a href="#mote-voksne">Møteplasser og aktivitet</a>.</p>
+    </div>
+
+    <h2 id="fs-sporre">Spør en kollega</h2>
+    <div class="kort">
+      <h3>PPT Tønsberg</h3>
+      <p>Pedagogisk-psykologisk tjeneste kan veilede ved spørsmål om språk, læring og utvikling.</p>
+      <dl class="meta"><dt>Kontakt</dt><dd>Sentralbord 33 40 60 00</dd></dl>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- shared tail: other topics + feedback (moved into each page by script) -->
+<template id="tail">
+  <div class="othertopics related">
+    <h2>Andre temaer</h2>
+    <ul class="tiles"></ul>
+  </div>
+</template>
+
+<section class="feedback" aria-label="Tilbakemelding">
+  <div class="wrap">
+    <h2>Fant du det du lette etter?</h2>
+    <div class="fbtns" id="fbStep1">
+      <button class="fbtn" type="button" data-fb="ja">JA
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v9H3v-9zM7 11l4-8c2 0 3 1 3 3l-1 4h6c1.2 0 2 1 1.8 2.2l-1.5 6.5c-.2 1-1 1.3-1.8 1.3H7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+      <button class="fbtn" type="button" data-fb="nei">NEI
+        <svg viewBox="0 0 24 24" aria-hidden="true" style="transform:scaleY(-1)"><path d="M7 11v9H3v-9zM7 11l4-8c2 0 3 1 3 3l-1 4h6c1.2 0 2 1 1.8 2.2l-1.5 6.5c-.2 1-1 1.3-1.8 1.3H7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+    </div>
+    <form id="fbStep2" hidden>
+      <label for="fbText">Hva lette du etter, eller hva var feil?</label>
+      <textarea id="fbText"></textarea>
+      <p class="small">Ikke skriv personopplysninger om familier.</p>
+      <button class="fbtn" type="submit">Send</button>
+    </form>
+    <p class="thanks" id="fbThanks" hidden>Takk for tilbakemeldingen!</p>
+  </div>
+</section>
+
+<div class="wave" aria-hidden="true">
+  <svg viewBox="0 0 1440 300" preserveAspectRatio="none">
+    <defs><linearGradient id="wg" x1="0" x2="1"><stop offset="0" stop-color="#c3d8b2"/><stop offset=".55" stop-color="#eef1e8"/><stop offset="1" stop-color="#c3d8b2"/></linearGradient></defs>
+    <path d="M0 250 C300 210 380 120 560 115 C760 110 880 165 1000 150 C1120 135 1150 10 1230 15 C1300 20 1360 40 1440 50 L1440 300 L0 300Z" fill="url(#wg)"/>
+    <path d="M160 300 C330 270 420 150 560 140 C760 128 860 190 1000 175 C1120 160 1160 45 1230 50 C1300 55 1360 70 1440 80 L1440 300Z" fill="#003a52"/>
+  </svg>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div>
+      <h2>Telefon</h2>
+      <h3>Sentralbord</h3>
+      <p><span class="fake">33 40 60 00</span> (kl. 09.00–15.00)</p>
+      <p class="gap"><span class="fake">Vakt- og hjelpetelefoner</span></p>
+      <p class="some"><svg viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="2" fill="#fff"/><path d="M13.5 20v-7h2.3l.4-2.7h-2.7V8.6c0-.8.3-1.3 1.4-1.3h1.4V4.9c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5v2H8.6V13h2.3v7z" fill="#003a52"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" fill="#fff"/><rect x="4" y="4" width="12" height="12" rx="3.5" fill="none" stroke="#003a52" stroke-width="1.6"/><circle cx="10" cy="10" r="2.8" fill="none" stroke="#003a52" stroke-width="1.6"/><circle cx="14" cy="6" r=".9" fill="#003a52"/></svg></p>
+    </div>
+    <div>
+      <h2>Post og besøk</h2>
+      <h3>E-post</h3>
+      <p><span class="fake">postmottak@tonsberg.kommune.no</span></p>
+      <h3>Post</h3>
+      <p>Tønsberg kommune<br>Postboks 2410<br>3104 Tønsberg</p>
+      <h3>Besøk</h3>
+      <p>Tønsberg rådhus<br>Halfdan Wilhelmsens allé 1 C<br>3110 Tønsberg<br>(inngang fra Seebergs gate)</p>
+      <p class="gap">(kl. 08.00–15.30)</p>
+    </div>
+    <div>
+      <h2>Om kommunen</h2>
+      <h3>Organisasjonsnummer</h3>
+      <p>921 383 681</p>
+      <h3>Kommunenummer</h3>
+      <p>3905</p>
+      <h3>Kontonummer</h3>
+      <p>2400 05 09988</p>
+      <p class="gap stack"><span class="fake">Politikk og medvirkning</span><span class="fake">Personvernerklæring</span><span class="fake">Tilgjengelighet</span><span class="fake">Tilgjengelighetserklæring for tonsberg.kommune.no</span></p>
+    </div>
+    <div>
+      <h2>Snarveier</h2>
+      <ul class="shortcuts">
+        <li>Aktivitetskalenderen Friskus</li><li>Melde om feil</li><li>Kart</li><li>Web-TV</li><li>Innsyn i postlister og saker</li><li>For ansatte</li><li>Min Gat</li><li>Min Eiendom</li><li>Jobbe i kommunen</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<button class="totop" id="toTop" type="button" aria-label="Til toppen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+
+<script>
+(function(){
+  const TOPICS=[
+    ["forste-mote","Det første møtet – de fire viktige spørsmålene"],
+    ["barnehage","Barnehage"],
+    ["helse","Helse og helsestasjon"],
+    ["sprak-tolk","Språk og tolk"],
+    ["okonomi","Økonomi og arbeid"],
+    ["opphold","Oppholdsstatus og rettigheter"],
+    ["bolig","Bosetting og bolig"],
+    ["moteplasser","Møteplasser og aktivitet"],
+    ["krise","Krisesituasjoner"]
+  ];
+  const chev='<svg class="chev" viewBox="0 0 9 14" aria-hidden="true"><path d="M1.5 1.5 7 7l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+  const tileHTML=list=>list.map(([id,t])=>`<li><a href="#${id}">${chev}<span>${t}</span></a></li>`).join("");
+
+  const FAG=[
+    ["fag-barnehage","For deg i barnehagen"],
+    ["fag-helsestasjon","For deg på helsestasjonen"],
+    ["fag-skole","For deg i skolen"]
+  ];
+  document.getElementById("tiles").innerHTML=tileHTML(TOPICS.map(([id,t])=>[id,id==="forste-mote"?"Det første møtet":t]));
+  document.getElementById("fagtiles").innerHTML=tileHTML(FAG);
+  const pages=[...document.querySelectorAll(".page")];
+
+  const tpl=document.getElementById("tail");
+  pages.filter(p=>p.id!=="forside").forEach(p=>{
+    const frag=tpl.content.cloneNode(true);
+    const isFag=p.id.startsWith("fag-");
+    frag.querySelector("h2").textContent=isFag?"Andre fagområder":"Andre temaer";
+    frag.querySelector(".tiles").innerHTML=tileHTML((isFag?FAG:TOPICS).filter(([id])=>id!==p.id));
+    p.querySelector(".wrap").appendChild(frag);
+  });
+
+  // feedback (prototype: nothing is stored) — resets on every page change
+  const s1=document.getElementById("fbStep1"),s2=document.getElementById("fbStep2"),ok=document.getElementById("fbThanks"),ta=document.getElementById("fbText");
+  function resetFb(){s1.hidden=false;s2.hidden=true;ok.hidden=true;ta.value=""}
+  s1.addEventListener("click",e=>{
+    const b=e.target.closest("button"); if(!b)return;
+    s1.hidden=true;
+    if(b.dataset.fb==="ja"){ok.hidden=false}else{s2.hidden=false;ta.focus()}
+  });
+  s2.addEventListener("submit",e=>{e.preventDefault();s2.hidden=true;ok.hidden=false});
+
+  const crumbs=document.getElementById("crumbs");
+  function setCrumbs(page){
+    const base=`<li><span>Forside</span></li><li><span>Tjenester</span></li><li><span>Barn, ungdom og familie</span></li>`;
+    crumbs.innerHTML=page.id==="forside"
+      ? base+`<li><span aria-current="page">Ressurs migrasjon</span></li>`
+      : base+`<li><a href="#forside">Ressurs migrasjon</a></li><li><span aria-current="page">${page.dataset.title}</span></li>`;
+  }
+
+  let current=null;
+  function show(id,push){
+    let page=document.getElementById(id), target=null;
+    if(!page||!page.classList.contains("page")){
+      target=page; page=target?target.closest(".page"):null;
+      if(!page){page=document.getElementById("forside");target=null}
+    }
+    const changed=page!==current;
+    pages.forEach(p=>p.hidden=p!==page);
+    current=page;
+    setCrumbs(page);
+    document.title=page.dataset.title+" – Tønsberg kommune";
+    if(changed)resetFb();
+    if(target){
+      if(target.tagName==="DETAILS")target.open=true;
+      const d=target.parentElement&&target.parentElement.closest("details"); if(d)d.open=true;
+      requestAnimationFrame(()=>{const y=target.getBoundingClientRect().top+window.scrollY-90;window.scrollTo({top:y})});
+    } else window.scrollTo({top:0});
+    if(push){try{history.pushState(null,"","#"+id)}catch(e){}}
+  }
+
+  // intercept in-page links so navigation works even where hash changes are blocked
+  document.addEventListener("click",e=>{
+    const a=e.target.closest('a[href^="#"]'); if(!a)return;
+    e.preventDefault();
+    show(a.getAttribute("href").slice(1)||"forside",true);
+  });
+  window.addEventListener("popstate",()=>show(location.hash.slice(1)||"forside",false));
+  window.addEventListener("hashchange",()=>show(location.hash.slice(1)||"forside",false));
+
+  document.getElementById("toTop").addEventListener("click",()=>window.scrollTo({top:0}));
+
+  let start="forside"; try{start=decodeURIComponent(location.hash.slice(1))||"forside"}catch(e){}
+  show(start,false);
+})();
+</script>
+
+</body>
+</html>
