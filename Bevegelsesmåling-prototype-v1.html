@@ -1,0 +1,280 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Bevegelsesmåling konsepttest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap">
+<style>
+/* Layout: fire skjermer i én smal kolonne – rolle, før, etter, oversikt. Skisseark på gråpapir */
+:root{
+  --kraft:#c7b99d;--sheet:#f8f4ea;--ink:#27251f;--pencil:#6b6457;--pen:#2c4a8a;--warn:#a33a2a;
+  --s0:#ec8a74;--s1:#f2b766;--s2:#f1dc6e;--s3:#a6cf8f;--same:#e2dacb;
+  --hand:"Patrick Hand","Comic Sans MS","Segoe Print",system-ui,sans-serif;
+  --marker:"Caveat","Segoe Print","Comic Sans MS",cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{background:var(--kraft)}
+body{color:var(--ink);font-family:var(--hand);font-size:18px;line-height:1.4;padding-inline:16px;padding-block:16px 60px;
+  background-image:radial-gradient(rgba(0,0,0,.05) 1px,transparent 1px);background-size:7px 7px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:3px solid var(--ink);padding-bottom:6px}
+.logo{font-family:var(--marker);font-size:28px;font-weight:700;line-height:1}
+.logo small{display:block;font-family:var(--hand);font-size:14px;font-weight:400;opacity:.8}
+.steps{display:flex;gap:5px;font-size:14px;flex-wrap:wrap}
+.steps span{padding:0 8px;border:1.5px solid var(--ink);border-radius:10px 4px 10px 4px}
+.steps span.on{background:var(--ink);color:var(--sheet)}
+.sheet{background:var(--sheet);padding:18px 16px;border:2px solid var(--ink);border-radius:255px 14px 225px 12px/12px 225px 14px 255px;box-shadow:3px 4px 0 rgba(39,37,31,.25);display:flex;flex-direction:column;gap:12px;min-width:0}
+h1,h2,h3{font-family:var(--marker);font-weight:700;margin:0;line-height:1.05;text-wrap:balance}
+h1{font-size:40px}h2{font-size:30px}h3{font-size:24px}
+p{margin:0}
+.small{font-size:15px}.muted{color:var(--pencil)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px dashed var(--pen);outline-offset:2px}
+.btn{background:var(--sheet);border:2px solid var(--ink);padding:10px 18px;font-size:19px;border-radius:12px 225px 12px 255px/255px 12px 225px 12px;box-shadow:2px 3px 0 var(--ink)}
+.btn:active{transform:translate(2px,3px);box-shadow:none}
+.btn.go{background:var(--ink);color:var(--sheet)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.chiprow{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:#fff;border:1.5px solid var(--ink);border-radius:14px 6px 14px 6px;padding:4px 12px;font-size:16px}
+.chip.sel{background:var(--ink);color:var(--sheet)}
+.chip.sel::before{content:"✔ "}
+.chip.role.sel::before{content:""}
+input[type=text]{width:100%;font:inherit;font-size:17px;border:none;border-bottom:2px solid var(--ink);background:transparent;padding:4px 2px;color:var(--ink)}
+/* registreringskort */
+.card{border:2px solid var(--ink);border-radius:6px 14px 8px 12px/12px 8px 14px 6px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:10px}
+.card h3{font-size:24px}
+.flags{display:flex;flex-direction:column;gap:2px}
+.flag{display:flex;gap:10px;align-items:flex-start;text-align:left;background:none;border:none;padding:4px 0;font-size:16px;line-height:1.25}
+.flag .box{flex:none;width:22px;height:22px;border:2px solid var(--ink);border-radius:3px 6px 3px 5px;background:#fff;display:grid;place-items:center;font-family:var(--marker);font-size:22px;line-height:1}
+.flag.on{font-weight:700}
+.flag .sev{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px;border:1px solid var(--ink)}
+.states{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.st{border:1.5px solid rgba(39,37,31,.4);border-radius:6px;padding:6px 2px;font-size:13px;line-height:1.1;opacity:.55;position:relative;min-height:44px}
+.st.sel{opacity:1;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink);font-weight:700}
+.st.sug{opacity:.9;border:2.5px dashed var(--ink)}
+.st.sug::after{content:"forslag";position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:11px;background:var(--sheet);border:1px solid var(--ink);border-radius:6px;padding:0 4px}
+.st.was::after{content:"før";position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:11px;background:var(--sheet);border:1px dashed var(--ink);border-radius:6px;padding:0 4px}
+.st.nx{grid-column:1/-1;min-height:34px;background:#fff;border-style:dashed}
+.hint{font-size:14px;color:var(--pencil)}
+.linkbtn{background:none;border:none;padding:0;color:var(--pen);text-decoration:underline;font-size:15px;align-self:flex-start}
+.desc{background:var(--sheet);border:1.5px solid var(--ink);border-radius:6px;padding:8px 10px;font-size:14px;display:flex;flex-direction:column;gap:4px}
+.desc div{display:flex;gap:8px}.desc i{flex:none;width:14px;height:14px;border:1px solid var(--ink);margin-top:2px}
+.s0{background:var(--s0)}.s1{background:var(--s1)}.s2{background:var(--s2)}.s3{background:var(--s3)}
+/* forside */
+.eyebrow{font-family:var(--marker);font-size:22px;font-weight:700;background:#fff17a;align-self:flex-start;padding:0 10px;transform:rotate(-1.5deg)}
+.prem{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:16px}
+.tagx{font-size:14px;border:1.5px solid var(--ink);border-radius:10px 4px 10px 4px;padding:1px 8px;background:#fff}
+.sitrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.sitrow div{border:2px solid var(--ink);border-radius:6px;padding:6px;display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.2;min-width:0}
+.sitrow b{font-family:var(--marker);font-size:19px;line-height:1}
+.arrowline{font-family:var(--marker);font-size:24px;font-weight:700;text-align:right}
+.task{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px}
+.note{border:2px dashed var(--ink);border-radius:8px;padding:10px 12px;background:#fff;font-size:16px}
+@media (max-width:420px){.sitrow{grid-template-columns:1fr 1fr}}
+/* oversikt */
+.chart{overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:300px;height:auto}
+.big{font-family:var(--marker);font-size:54px;font-weight:700;line-height:.9}
+.kpi{display:flex;gap:14px;align-items:center}
+.barrow{display:grid;grid-template-columns:104px minmax(0,1fr);gap:10px;align-items:center}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:flex;height:22px;border:2px solid var(--ink);border-radius:4px 8px 3px 7px;overflow:hidden;background:#fff}
+.bar span{display:block}
+.up{background:var(--s3)}.same{background:var(--same)}.down{background:var(--s0)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
+.legend i{display:inline-block;width:13px;height:13px;border:1.5px solid var(--ink);vertical-align:-2px;margin-right:3px}
+.cmp{display:flex;flex-direction:column;gap:8px}
+.cmp .r{display:grid;grid-template-columns:minmax(0,1fr) 110px 36px;gap:8px;align-items:center;font-size:15px}
+.cmp .r.me{font-weight:700}
+.mini{height:16px;border:1.5px solid var(--ink);border-radius:3px;background:#fff;overflow:hidden}
+.mini span{display:block;height:100%;background:var(--s3)}
+@media (max-width:400px){.barrow{grid-template-columns:1fr}.cmp .r{grid-template-columns:minmax(0,1fr) 70px 36px}}
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+const ST=['Uholdbar','Utsatt','Stabil','Bærekraftig'];
+const ROLES=[
+ {id:'barnehage',navn:'Barnehage',grp:'barn',omr:['dag','trivsel','nettverk','familie']},
+ {id:'helsestasjon',navn:'Helsestasjon',grp:'barn',omr:['fysisk','familie','psykisk','bolig']},
+ {id:'skole',navn:'Skole (kontaktlærer, rådgiver)',grp:'skole',omr:['dag','trivsel','nettverk','fritid']},
+ {id:'skolehelse',navn:'Skolehelsetjenesten',grp:'skole',omr:['psykisk','fysisk','trivsel','familie']},
+ {id:'ppt',navn:'PPT',grp:'skole',omr:['dag','trivsel','psykisk']},
+ {id:'ot',navn:'Oppfølgingstjenesten',grp:'ung',omr:['dag','fritid','psykisk','bolig']},
+ {id:'nav',navn:'NAV',grp:'ung',omr:['dag','bolig','psykisk','rus']}
+];
+// Røde flagg per livsområde. Tallet er hvilken situasjon flagget peker mot (0 uholdbar, 1 utsatt, 2 stabil).
+const AREAS={
+ dag:{navn:{barn:'Barnehage',skole:'Skole',ung:'Skole, arbeid eller tiltak'},kort:'Skole/arbeid',
+  f:{barn:[['Fravær over 15 % siste tre måneder',1],['Lange perioder borte uten forklaring',0],['Kommer ofte sent eller hentes tidlig',2],['Står uten barnehageplass',1]],
+     skole:[['Fravær over 10 % siste tre måneder',1],['Fravær over 25 %, eller skolevegring',0],['Faller ut av enkelttimer',1],['Trenger tilrettelegging for å henge med',2],['Ingen plan for overgang eller neste skoleår',1]],
+     ung:[['Ikke i skole, arbeid eller tiltak',0],['Avbrutt skole eller tiltak siste år',1],['Mangler fullført videregående',1],['I tiltak, men uten klar plan videre',2]]},
+  d:['Ikke i barnehage, skole eller arbeid, eller svært høyt fravær.','Høyt eller økende fravær. Faller ut.','Møter stort sett, trenger tilrettelegging.','Møter jevnt, i et ordinært løp.']},
+ trivsel:{navn:'Trivsel og mestring',kort:'Mestring',
+  f:[['Sier at hen ikke får til noe',1],['Trekker seg unna oppgaver og aktiviteter',1],['Sterk uro eller utagering',1],['Gir helt opp eller nekter å delta',0],['Strever på enkelte områder, mestrer resten',2]],
+  d:['Gir opp, trekker seg helt unna.','Mestrer lite. Lite tro på seg selv.','Mestrer mye, strever med noe.','Får til ting og har tro på seg selv.']},
+ nettverk:{navn:'Venner og nettverk',kort:'Nettverk',
+  f:[['Mye alene i friminutt eller lek',1],['Ingen faste venner',1],['Ingen trygg voksen utenfor hjemmet',0],['Utsatt for mobbing eller utestenging',0],['Familien har lite nettverk rundt seg',1]],
+  d:['Isolert. Ingen trygge relasjoner utenfor hjemmet.','Få relasjoner, ofte alene.','Noen venner og trygge voksne.','Gode relasjoner og støtte rundt seg.']},
+ fritid:{navn:'Fritid og deltakelse',kort:'Fritid',
+  f:[['Ingen faste fritidsaktiviteter',1],['Sluttet på en aktivitet siste halvår',1],['Økonomi eller transport hindrer deltakelse',1],['Mye tid alene på skjerm',2]],
+  d:['Ingen aktiviteter. Mye alene.','Har prøvd, men falt fra.','Deltar av og til.','Deltar fast, sammen med andre.']},
+ fysisk:{navn:'Fysisk helse',kort:'Fysisk helse',
+  f:[['Hyppige plager som vondt i magen eller hodet',1],['Uavklarte helseplager',1],['Alvorlig sykdom uten oppfølging',0],['Avvik i vekst eller utvikling',1],['Søvnproblemer',2]],
+  d:['Alvorlige plager uten oppfølging.','Plager som påvirker hverdagen mye.','Avklart, følges opp, påvirker lite.','God eller godt avklart helse.']},
+ psykisk:{navn:'Psykisk helse',kort:'Psykisk helse',
+  f:[['Tydelig nedstemthet eller angst',1],['Venter på hjelp, eller har takket nei',1],['Alvorlig bekymring som krever rask henvisning',0],['Får hjelp, men vansker påvirker hverdagen',2]],
+  d:['Store vansker. Får ikke hjelp.','Tydelige tegn. Uavklart eller venter.','Har vansker, men får hjelp.','Har det stort sett bra.']},
+ familie:{navn:'Barnas situasjon',kort:'Barnas situasjon',
+  f:[['Mye konflikt mellom foreldrene',1],['Foreldre strever med egen helse eller rus',1],['Barnet har omsorgsoppgaver hjemme',1],['Bekymring for omsorgen',0],['Lite samarbeid med hjemmet',2]],
+  d:['Mye konflikt eller svikt i omsorgen.','Foreldrene strever. Barnet bærer mye.','Noen utfordringer, men samarbeid.','Trygt og forutsigbart.']},
+ bolig:{navn:'Bolig og økonomi',kort:'Bolig/økonomi',
+  f:[['Uten fast bolig',0],['Trangbodd eller usikker bolig',1],['Tegn på dårlig økonomi (utstyr, mat, aktiviteter)',1],['Mottar sosialhjelp eller nødhjelp',1]],
+  d:['Uten fast bolig eller akutt krise.','Usikker bolig, lite penger, gjeld.','Stabil, men lite å gå på.','God bolig og kontroll på økonomien.']},
+ rus:{navn:'Rus',kort:'Rus',
+  f:[['Rusbruk påvirker skole eller arbeid',0],['Har prøvd rus, eller vennekrets som ruser seg',1],['Rus hos foreldre påvirker barnet',1]],
+  d:['Rus styrer hverdagen (personen eller familien).','Rus påvirker hverdagen.','Har kontroll, påvirker lite.','Uproblematisk.']}
+};
+const ORDER=['dag','trivsel','nettverk','fritid','fysisk','psykisk','familie','bolig','rus'];
+const OTHERS={dag:[14,17,3],trivsel:[16,15,2],nettverk:[11,19,2],fritid:[9,18,1],fysisk:[4,22,1],psykisk:[12,16,5],familie:[8,20,3],bolig:[5,21,2],rus:[2,14,1]};
+const OTHER_N=37,OTHER_MOVED=23;
+const CMP=[['Språk- og lekegruppe i barnehagen',64,22],['Foreldreveiledning i gruppe',58,31],['Samtalegruppe, 8. trinn',47,36],['Tilrettelagt leseopplegg',39,28],['Arbeidstrening med veileder',33,24],['Jobbspesialist for unge',29,41]];
+
+const fresh=()=>({step:0,role:null,areas:[],flags:{},before:{},after:{},tiltak:'',open:null});
+let S=fresh();
+const app=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const role=()=>ROLES.find(r=>r.id===S.role);
+const grp=()=>role()?role().grp:'skole';
+const aNavn=k=>{const n=AREAS[k].navn;return typeof n==='string'?n:n[grp()]};
+const aFlags=k=>{const f=AREAS[k].f;return Array.isArray(f)?f:f[grp()]};
+const chosen=()=>ORDER.filter(k=>S.areas.includes(k));
+const suggest=k=>{const on=(S.flags[k]||[]);if(!on.length)return null;return Math.min(...on.map(i=>aFlags(k)[i][1]))};
+
+function header(){
+ return `<div class="topbar"><div class="logo">Bevegelsesmåling${role()?`<small>${esc(role().navn)}</small>`:''}</div><div class="steps">${['Start','Rolle','Før','Etter','Oversikt'].map((s,i)=>`<span class="${i===S.step?'on':''}">${s}</span>`).join('')}</div></div>`;
+}
+function vRole(){
+ const r=role(),rest=ORDER.filter(k=>!(r&&r.omr.includes(k)));
+ return `<div class="sheet"><h1>Hvor jobber du?</h1>
+  <div class="chiprow">${ROLES.map(x=>`<button class="chip role ${S.role===x.id?'sel':''}" data-a="role" data-v="${x.id}">${x.navn}</button>`).join('')}</div></div>
+ ${r?`<div class="sheet"><h2>Hva kan du si noe om?</h2>
+  <p class="small muted">Disse områdene er vanlige for din rolle. Fjern eller legg til.</p>
+  <div class="chiprow">${r.omr.map(k=>`<button class="chip ${S.areas.includes(k)?'sel':''}" data-a="area" data-v="${k}">${aNavn(k)}</button>`).join('')}</div>
+  <p class="small muted">Andre livsområder du kjenner til for denne personen:</p>
+  <div class="chiprow">${rest.map(k=>`<button class="chip ${S.areas.includes(k)?'sel':''}" data-a="area" data-v="${k}">${aNavn(k)}</button>`).join('')}</div></div>`:''}
+ <div class="nav"><span></span><button class="btn go" data-a="next" ${r&&S.areas.length?'':'disabled'}>Neste →</button></div>`;
+}
+function states(k,mode){
+ const val=mode==='after'?S.after[k]:S.before[k],sg=mode==='before'?suggest(k):null;
+ return `<div class="states">${[0,1,2,3].map(i=>`<button class="st s${i} ${val===i?'sel':''} ${val!==i&&sg===i?'sug':''} ${mode==='after'&&S.before[k]===i&&val!==i?'was':''}" data-a="set" data-m="${mode}" data-k="${k}" data-v="${i}">${ST[i]}</button>`).join('')}
+  <button class="st nx ${val===-1?'sel':''}" data-a="set" data-m="${mode}" data-k="${k}" data-v="-1">Kan jeg ikke si noe om</button></div>`;
+}
+function info(k){
+ return `<button class="linkbtn" data-a="info" data-k="${k}">${S.open===k?'Skjul beskrivelsene':'Se hva situasjonene betyr'}</button>
+ ${S.open===k?`<div class="desc">${AREAS[k].d.map((t,i)=>`<div><i class="s${i}"></i><span><b>${ST[i]}:</b> ${t}</span></div>`).join('')}</div>`:''}`;
+}
+function vBefore(){
+ const ks=chosen(),n=ks.filter(k=>S.before[k]!==undefined).length;
+ return `<div class="sheet"><h1>Hvor står personen nå?</h1>
+  <p>Nå skal du for første gang vurdere en person eller familie du følger opp, rett før de får en innsats. Tenk på en konkret person. Ikke skriv navn.</p>
+  <p class="small muted">Kryss av for det du ser. Flaggene gir et forslag til situasjon, men det er du som velger.</p></div>
+ ${ks.map(k=>{const on=S.flags[k]||[],sg=suggest(k);return `<div class="card"><h3>${aNavn(k)}</h3>
+  <div class="flags">${aFlags(k).map(([t,s],i)=>`<button class="flag ${on.includes(i)?'on':''}" data-a="flag" data-k="${k}" data-v="${i}"><span class="box">${on.includes(i)?'✔':''}</span><span>${t}</span></button>`).join('')}</div>
+  ${states(k,'before')}
+  <p class="hint">${sg===null?'Ingen flagg krysset av.':`Flaggene peker mot <b>${ST[sg].toLowerCase()}</b>.`}${S.before[k]===undefined?' Velg situasjon.':''}</p>
+  ${info(k)}</div>`}).join('')}
+ <div class="sheet"><label for="tiltak">Hvilken innsats får personen?</label>
+  <input type="text" id="tiltak" data-f="tiltak" placeholder="F.eks. samtalegruppe, arbeidstrening, foreldreveiledning" value="${esc(S.tiltak)}"></div>
+ <div class="nav"><button class="btn" data-a="back">← Tilbake</button><span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span class="small muted">${n} av ${ks.length} områder</span><button class="btn go" data-a="next" ${n===ks.length?'':'disabled'}>Neste →</button></span></div>`;
+}
+function vAfter(){
+ const ks=chosen(),n=ks.filter(k=>S.after[k]!==undefined).length;
+ return `<div class="sheet"><h1>Noen måneder senere</h1>
+  <p>Nå skal du vurdere den samme personen igjen, noen måneder senere. Innsatsen er gjennomført. Hvor står personen nå?</p>
+  <p class="small muted">Merket «før» viser forrige plassering. Flaggene du krysset av sist, står under.</p></div>
+ ${ks.map(k=>{const on=S.flags[k]||[];return `<div class="card"><h3>${aNavn(k)}</h3>
+  ${on.length?`<p class="hint">Sist: ${on.map(i=>aFlags(k)[i][0].toLowerCase()).join(' · ')}</p>`:''}
+  ${states(k,'after')}${info(k)}</div>`}).join('')}
+ <div class="nav"><button class="btn" data-a="back">← Tilbake</button><span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span class="small muted">${n} av ${ks.length}</span><button class="btn go" data-a="next" ${n===ks.length?'':'disabled'}>Se oversikten →</button></span></div>`;
+}
+function arrows(ks){
+ const L=104,W=340,cw=(W-L-8)/4,rh=34,t=28,H=t+ks.length*rh+6,cx=i=>L+cw*i+cw/2;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Personens bevegelse fra før til etter"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#27251f"/></marker></defs>`;
+ [0,1,2,3].forEach(i=>{s+=`<rect x="${L+cw*i}" y="${t-4}" width="${cw}" height="${H-t}" style="fill:var(--s${i})" opacity=".3"/><text x="${cx(i)}" y="17" text-anchor="middle" font-family="Caveat,cursive" font-size="15" font-weight="700" fill="#27251f">${ST[i]}</text>`});
+ ks.forEach((k,j)=>{const y=t+j*rh+rh/2,x1=cx(S.before[k]),x2=cx(S.after[k]);
+  s+=`<text x="2" y="${y+5}" font-family="Patrick Hand,sans-serif" font-size="14" fill="#27251f">${AREAS[k].kort}</text>`;
+  if(x1===x2)s+=`<circle cx="${x1}" cy="${y}" r="7" fill="#27251f"/>`;
+  else{const d=x2>x1?1:-1;s+=`<path d="M${x1},${y} Q${(x1+x2)/2},${y-6} ${x2-d*9},${y}" stroke="${d>0?'#27251f':'#a33a2a'}" stroke-width="2.5" fill="none" stroke-linecap="round" ${d<0?'stroke-dasharray="5 4"':''} marker-end="url(#ah)"/><circle cx="${x1}" cy="${y}" r="6" fill="#27251f"/><circle cx="${x2}" cy="${y}" r="7" fill="#fff" stroke="#27251f" stroke-width="2.5"/>`}});
+ return s+'</svg>';
+}
+function vOverview(){
+ const ks=chosen().filter(k=>S.before[k]>=0&&S.after[k]>=0),name=S.tiltak.trim()||'Din innsats';
+ const moved=ks.some(k=>S.after[k]>S.before[k]);
+ const N=OTHER_N+1,M=OTHER_MOVED+(moved?1:0),pct=Math.round(M/N*100);
+ const rows=ORDER.map(k=>{const o=OTHERS[k].slice(),mine=ks.includes(k);if(mine){const d=S.after[k]-S.before[k];o[d>0?0:d<0?2:1]++}const tot=o[0]+o[1]+o[2];return{kort:AREAS[k].kort,o,tot,mine}});
+ const cmp=[...CMP.map(c=>({n:c[0],p:c[1],c:c[2]})),{n:name,p:pct,c:N,me:true}].sort((a,b)=>b.p-a.p);
+ return `<div class="sheet"><h2>Personen du registrerte</h2>
+  ${ks.length?`<div class="chart">${arrows(ks)}</div>`:'<p class="muted">Ingen områder har vurdering både før og etter, så det er ingen bevegelse å vise.</p>'}
+  <div class="legend"><span>● før</span><span>○ etter</span><span style="color:var(--warn)">- - → feil vei</span></div>
+  <p class="small muted">Personen telles nå med i oversikten for «${esc(name)}», uten navn.</p></div>
+ <div class="sheet"><h2>${esc(name)}</h2>
+  <div class="kpi"><span class="big">${M} av ${N}</span><span>deltakere har flyttet seg mot en mer bærekraftig situasjon på minst ett område.</span></div>
+  <div class="bars">${rows.map(r=>`<div class="barrow"><span class="small">${r.kort}${r.mine?' •':''}</span><div class="bar"><span class="up" style="width:${r.o[0]/r.tot*100}%"></span><span class="same" style="width:${r.o[1]/r.tot*100}%"></span><span class="down" style="width:${r.o[2]/r.tot*100}%"></span></div></div>`).join('')}</div>
+  <div class="legend"><span><i class="up"></i>mot bærekraftig</span><span><i class="same"></i>uendret</span><span><i class="down"></i>feil vei</span><span>• din person er med</span></div></div>
+ <div class="sheet"><h2>Hvilken innsats flytter folk?</h2>
+  <p class="small muted">Andel deltakere som har flyttet seg mot bærekraftig, per innsats i kommunen.</p>
+  <div class="cmp">${cmp.map(c=>`<div class="r ${c.me?'me':''}"><span>${esc(c.n)} <span class="muted small">(${c.c})</span></span><div class="mini"><span style="width:${c.p}%"></span></div><span>${c.p} %</span></div>`).join('')}</div></div>
+ <div class="nav"><button class="btn" data-a="back">← Tilbake</button><button class="btn" data-a="reset">Start på nytt ↺</button></div>`;
+}
+function vIntro(){
+ const sit=[['Uholdbar','krever handling nå'],['Utsatt','tydelig risiko, trenger hjelp'],['Stabil','fungerer, ofte med støtte'],['Bærekraftig','klarer seg godt']];
+ return `<div class="sheet"><span class="eyebrow">Høsten 2028</span>
+  <h1>Vi måler bevegelse, ikke bare status</h1>
+  <p>Kommunen er blitt enig om at <b>utenforskap er et felles ansvar</b>. Vi jobber med tidlig innsats ved at vi sammen oppdager og følger opp tidlige tegn og mulige risikofaktorer. Det betyr at vi</p>
+  <ul class="prem">
+   <li>har strukturer for samhandling, deling og styring</li>
+   <li>jobber kunnskapsbasert med det vi vet virker: samtidig og tverrfaglig samarbeid, individuell tilpasning og relasjonell kompetanse</li>
+   <li>skaper løsninger sammen med barn, unge og familiene deres</li>
+   <li>tør å prøve noe nytt, og jobber brukerorientert, eksperimentelt og på tvers</li>
+  </ul>
+  <p>For å vite om innsatsen virker, har vi begynt med <b>bevegelsesmåling</b>. I stedet for å bare telle fravær eller antall på sosialhjelp, ser vi på om personene vi jobber med flytter seg i riktig retning – og hvilken innsats som får det til.</p></div>
+ <div class="sheet"><h2>Slik fungerer modellen</h2>
+  <p>En persons situasjon vurderes på ulike <b>livsområder</b>:</p>
+  <div class="chiprow">${ORDER.map(k=>`<span class="tagx">${AREAS[k].kort}</span>`).join('')}</div>
+  <p>På hvert område står personen i én av fire <b>situasjoner</b>:</p>
+  <div class="sitrow">${sit.map(([n,t],i)=>`<div class="s${i}"><b>${n}</b><span>${t}</span></div>`).join('')}</div>
+  <p class="arrowline">Målet er å flytte folk mot høyre →</p>
+  <p class="small muted">Vi vurderer før og etter en innsats. Bevegelsen telles sammen for alle som har fått innsatsen, uten navn. Da ser vi hva som virker.</p></div>
+ <div class="sheet"><h2>Din oppgave</h2>
+  <ol class="task">
+   <li>Velg hvor du jobber og hvilke livsområder du kan si noe om.</li>
+   <li>Tenk på en person du følger opp, og vurder hvor hen står før en innsats.</li>
+   <li>Vurder den samme personen igjen, noen måneder senere.</li>
+   <li>Se hva vurderingen din blir til.</li>
+  </ol>
+  <div class="note"><b>Vi tester ikke en app eller en løsning.</b> Skjermene er en skisse. Vi tester <i>ideen</i> om bevegelsesmåling, og vil høre hva du tenker underveis. Det finnes ingen riktige svar.</div></div>
+ <div class="nav"><span></span><button class="btn go" data-a="next">Start →</button></div>`;
+}
+const V=[vIntro,vRole,vBefore,vAfter,vOverview];
+function render(t){app.innerHTML=header()+V[S.step]();if(t)window.scrollTo(0,0)}
+app.addEventListener('click',e=>{
+ const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,k=b.dataset.k,v=b.dataset.v;
+ switch(a){
+  case 'role':if(S.role!==v){const st=S.step;S=fresh();S.step=st;S.role=v;S.areas=role().omr.slice()}break;
+  case 'area':{const i=S.areas.indexOf(v);if(i<0)S.areas.push(v);else{S.areas.splice(i,1);delete S.before[v];delete S.after[v];delete S.flags[v]}break}
+  case 'flag':{const l=S.flags[k]||(S.flags[k]=[]),i=l.indexOf(+v);i<0?l.push(+v):l.splice(i,1);break}
+  case 'set':{const o=b.dataset.m==='after'?S.after:S.before;o[k]=+v;break}
+  case 'info':S.open=S.open===k?null:k;break;
+  case 'next':S.step++;S.open=null;return render(true);
+  case 'back':S.step--;S.open=null;return render(true);
+  case 'reset':S=fresh();return render(true);
+ }
+ render();
+});
+app.addEventListener('input',e=>{if(e.target.dataset.f==='tiltak')S.tiltak=e.target.value});
+render();
+</script>
+
+</body></html>
