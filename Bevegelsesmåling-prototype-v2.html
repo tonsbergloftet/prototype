@@ -145,6 +145,20 @@ label.fl{display:flex;flex-direction:column;gap:4px}
 .hbar span{display:block;height:100%;background:var(--s3)}
 .kidrow{display:flex;flex-direction:column;gap:6px;padding:8px 0;border-top:2px dashed rgba(39,37,31,.25)}
 .kidrow>span{display:flex;flex-wrap:wrap;gap:5px}
+/* enkel oversikt */
+.anker{display:block;font-size:13px;color:var(--pen);margin-top:2px}
+.headline{font-size:18px}.bignum{font-family:var(--marker);font-size:40px;line-height:1}
+.mrow{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:2px dashed rgba(39,37,31,.25)}
+.mrow .lt{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}.mrow .lt b{font-size:18px}
+.mchips{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{display:inline-flex;align-items:center;gap:5px;border:2px solid var(--ink);border-radius:14px 6px 14px 6px;padding:3px 10px;font-size:15px}
+.mchip i{display:inline-block;width:12px;height:12px;border:1px solid var(--ink);border-radius:50%}
+.mchip b{margin-left:4px;font-size:16px}
+.mchip.up{background:#e3f1d9}.mchip.same{background:#efebe2;border-style:dashed}.mchip.down{background:#f7ddd5;border-color:var(--warn)}
+.krow{display:grid;grid-template-columns:130px minmax(0,1fr) 48px;gap:8px;align-items:center;padding:4px 0}
+.krow.mine>span:first-child{font-weight:700}
+.kbar{height:16px;border:1.5px solid var(--ink);border-radius:3px;background:#fff;overflow:hidden}.kbar span{display:block;height:100%;background:var(--s3)}
+@media (max-width:420px){.krow{grid-template-columns:100px minmax(0,1fr) 44px}}
 /* oversikt */
 .orow{display:flex;flex-direction:column;gap:5px;padding:10px 0;border-top:2px dashed rgba(39,37,31,.25)}
 .orow .lt{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}
@@ -215,6 +229,19 @@ const AKTORER=['Helsestasjon','Barnehage','Skole','PPT','Skolehelsetjenesten','B
 const MAATER=['Relasjonsbygging','Samtidig tverrfaglig samarbeid','Brobygging til andre tjenester','Nettverksbygging','Tilpasset opplegg','Samarbeid med familien','Medvirkning fra barnet eller den unge','Kartlegging og utredning','Praktisk hjelp'];
 // Oppdiktede tall for alle team i kommunen: [mot bærekraftig, uendret, feil vei]
 const RIG={arbeid:[42,61,9],bolig:[18,70,6],fysisk:[15,80,4],psykisk:[37,52,14],okonomi:[20,66,8],rus:[8,40,5],nettverk:[33,58,7],fritid:[29,55,6],barn:[46,64,11]};
+const ANKER=['Må noe skje nå?','Trengs det fortsatt tett hjelp for at det ikke skal bli verre?','Fungerer det, men med støtte eller tilrettelegging?','Ville det gått bra også uten hjelp fra noen tjeneste?'];
+const mchip=(d,n,v)=>`<span class="mchip ${n>d?'up':n<d?'down':'same'}"><i class="s${d}"></i>${SIT[d]} → <i class="s${n}"></i>${SIT[n]}<b>×${v}</b></span>`;
+function mrow(id,trans){
+ const list=Object.entries(trans).map(([k,v])=>{const [d,n]=k.split('-').map(Number);return{d,n,v}}).sort((a,b)=>b.v-a.v);
+ const n=list.reduce((a,x)=>a+x.v,0),up=list.filter(x=>x.n>x.d).reduce((a,x)=>a+x.v,0),dn=list.filter(x=>x.n<x.d).reduce((a,x)=>a+x.v,0),same=n-up-dn;
+ return `<div class="mrow"><div class="lt"><b>${SUB[id][0]}</b><span class="small">${up} mot høyre${same?` · ${same} uendret`:''}${dn?` · <span class="warn">${dn} feil vei</span>`:''}</span></div>
+  <div class="mchips">${list.map(x=>mchip(x.d,x.n,x.v)).join('')}</div>${n<5?'<span class="small muted">Under 5: vises bare samlet for hele kommunen.</span>':''}</div>`;
+}
+function rigRows(addFn){
+ return ASKER.map(([k,an])=>{const t=RIG[k].slice();const m=addFn(k,t);const n=t[0]+t[1]+t[2],pct=Math.round(t[0]/n*100);
+  return `<div class="krow ${m?'mine':''}"><span class="small">${an}${m?' •':''}</span><div class="kbar"><span style="width:${pct}%"></span></div><span class="small">${pct} %</span></div>`}).join('')
+  +'<p class="small muted">Andel som har flyttet seg mot høyre. • = deres tall er med.</p>';
+}
 const STEPS=[['start','Start'],['oppsett','Oppsett'],['barn','Barna'],['over','Oversikt']];
 const ENTALL={p0:'familie',p1:'barn',p2:'ung'};
 
@@ -231,12 +258,17 @@ const word=()=>({p0:'Familie',p1:'Barn',p2:'Ungdom'})[S.phase]||'Barn';
 /* eksempeldata for barna som ikke registreres i testen */
 function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function simKids(){
- const p=phase(),n=Math.max(0,S.total-S.kids.length),r=rng(S.phase.charCodeAt(1)*997+S.total),out=[];
+ const n=Math.max(0,S.total-S.kids.length);if(!n)return[];
+ const r=rng(S.phase.charCodeAt(1)*997+S.total),pool={};
+ S.kids.forEach(c=>c.areas.forEach(id=>{const p=c.pos[id];if(p&&p.da!==null&&p.na!==null)(pool[id]||(pool[id]=[])).push(p)}));
+ const areas=Object.keys(pool);if(!areas.length)return[];
+ const maxA=Math.max(1,...S.kids.map(c=>c.areas.length));
+ const mp=[...new Set(S.kids.flatMap(c=>c.maate))],ap=[...new Set(S.kids.flatMap(c=>c.akt))],out=[];
  for(let i=0;i<n;i++){
-  const ids=p.ids.slice().sort(()=>r()-.5).slice(0,1+Math.floor(r()*3)),pos={};
-  ids.forEach(id=>{const da=Math.floor(r()*3),x=r(),na=Math.max(0,Math.min(3,da+(x<.55?1:x<.65?2:x<.88?0:-1)));pos[id]={da,na}});
-  const maate=MAATER.slice().sort(()=>r()-.5).slice(0,1+Math.floor(r()*3)),akt=AKTORER.slice().sort(()=>r()-.5).slice(0,Math.floor(r()*3));
-  out.push({areas:ids,pos,akt,maate,txt:'',sim:true});
+  const ids=areas.slice().sort(()=>r()-.5).slice(0,1+Math.floor(r()*Math.min(areas.length,maxA))),pos={};
+  ids.forEach(id=>{const b=pool[id][Math.floor(r()*pool[id].length)],x=r();let na=b.na;if(x<.15)na=Math.min(3,na+1);else if(x<.27&&na>b.da)na=na-1;pos[id]={da:b.da,na}});
+  let maate=mp.filter(()=>r()<.65);if(!maate.length&&mp.length)maate=[mp[Math.floor(r()*mp.length)]];
+  out.push({areas:ids,pos,akt:ap.filter(()=>r()<.5),maate,txt:'',sim:true});
  }
  return out;
 }
@@ -257,7 +289,9 @@ function vStart(){
  <div class="sheet"><h2>Slik teller vi</h2>
   <p>På hvert område står et barn eller en familie i én av fire situasjoner:</p>
   <div class="sitrow">${SIT.map((n,i)=>`<div class="s${i}"><b>${n}</b><span>${SITKORT[i]}</span></div>`).join('')}</div>
-  <p>Vi registrerer hvor de stod for et år siden, og hvor de står nå. Målet er å flytte folk mot høyre.</p></div>
+  <p>Vi registrerer hvor de stod for et år siden, og hvor de står nå.</p>
+  <div class="note"><b>Målet er ikke at alle skal bli bærekraftige, men at det skjer en bevegelse mot høyre.</b> Fra uholdbar til utsatt er også en bevegelse som teller.</div>
+  <p class="small">Vurder ut fra hele livet til barnet eller familien, ikke bare det dere jobber med. Bærekraftig betyr at det ville gått bra også uten hjelp fra noen tjeneste.</p></div>
  <div class="sheet"><h2>Oppgaven deres</h2>
   <p>Tenk på barna og familiene dere har fulgt opp det siste året.</p>
   <ol class="task"><li>Velg livsfase og hvor mange dere har fulgt opp.</li><li>Ta dem ett og ett, uten navn: hvilke områder, fra hvilken situasjon til hvilken, og hvordan dere jobbet.</li><li>Se oversikten.</li></ol>
@@ -277,7 +311,7 @@ function vOppsett(){
 function areaCard(id){
  const c=kid(),[navn,,gj,k]=SUB[id],ps=c.pos[id]||{da:null,na:null},bad=S.errId===id;
  const prow=(lab,key)=>`<div class="prow"><span>${lab}</span>${SIT.map((s,i)=>`<button class="pc s${i} ${ps[key]===i?'sel':''}" data-a="set" data-k="${id}" data-m="${key}" data-v="${i}">${s}</button>`).join('')}</div>
-  <p class="pdesc">${ps[key]===null?'<span class="muted">Trykk på en situasjon for å se hva den betyr her.</span>':`<b>${SIT[ps[key]]}:</b> ${k[ps[key]]}`}</p>`;
+  <p class="pdesc">${ps[key]===null?'<span class="muted">Trykk på en situasjon for å se hva den betyr her.</span>':`<b>${SIT[ps[key]]}:</b> ${k[ps[key]]}<span class="anker">Sjekk: ${ANKER[ps[key]]}</span>`}</p>`;
  const sum=ps.da!==null&&ps.na!==null?`<span class="mvsum ${ps.na>ps.da?'up':ps.na<ps.da?'down':'same'}">${SIT[ps.da]} → ${SIT[ps.na]}</span>`:'';
  return `<div class="area2 ${bad?'need':''}" id="c-${id}"><div class="lt"><b>${navn}</b><span class="tag">gjelder: ${gj.toLowerCase()}</span>${sum}</div>
   ${prow('For et år siden','da')}${prow('Nå','na')}${bad?'<p class="errmsg">Velg både «for et år siden» og «nå».</p>':''}</div>`;
@@ -305,32 +339,22 @@ function vBarnBidro(){
  ${bar(back,`${w} ${S.k+1} av ${S.kids.length}`,`<button class="btn go" data-a="next">${last?'Se oversikten':`${w} ${S.k+2}`} →</button>`)}`;
 }
 function vOver(){
- const p=phase(),sims=simKids(),all=[...S.kids,...sims],w=word();
+ const p=phase(),sims=simKids(),all=[...S.kids,...sims],moved=all.filter(kidUp);
  const ids=p.ids.filter(id=>all.some(c=>c.areas.includes(id)&&c.pos[id]));
- const per=id=>all.filter(c=>c.areas.includes(id)&&c.pos[id]).map(c=>c.pos[id]);
- const dist=(l,key)=>{const c=[0,0,0,0];l.forEach(x=>c[x[key]]++);return `<div class="dbar">${c.map((v,i)=>v?`<span class="s${i}" style="width:${v/l.length*100}%">${v}</span>`:'').join('')}</div>`};
- const row=id=>{const l=per(id),up=l.filter(x=>x.na>x.da).length,dn=l.filter(x=>x.na<x.da).length,mine=S.kids.filter(c=>c.areas.includes(id)).length;
-  return `<div class="orow"><div class="lt"><b>${SUB[id][0]}</b><span class="small">${up} av ${l.length} mot bærekraftig${dn?` · <span class="warn">${dn} feil vei</span>`:''}</span></div>
-  <div class="dist"><span>Da</span>${dist(l,'da')}</div><div class="dist"><span>Nå</span>${dist(l,'na')}</div>
-  ${mine?`<span class="small muted">${mine} av dem registrerte dere selv.</span>`:''}${l.length<5?'<span class="small muted">Under 5: vises bare samlet for hele kommunen.</span>':''}</div>`};
- const rig=ASKER.map(([k,an])=>{const t=RIG[k].slice();let m=0;
-  all.forEach(c=>c.areas.forEach(id=>{if(SUB[id][1]===k&&c.pos[id]){const x=c.pos[id];t[x.na>x.da?0:x.na<x.da?2:1]++;m++}}));const n=t[0]+t[1]+t[2];
-  return `<div class="rrow ${m?'mine':''}"><span class="small">${an}</span><div class="dbar"><span class="up" style="width:${t[0]/n*100}%"></span><span class="same" style="width:${t[1]/n*100}%"></span><span class="down" style="width:${t[2]/n*100}%"></span></div>${m?`<span class="from">Fra dere: ${m} bevegelser</span>`:''}</div>`}).join('');
- const moved=all.filter(kidUp),mc=MAATER.map(m=>[m,moved.filter(c=>c.maate.includes(m)).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);
+ const trans=id=>{const t={};all.forEach(c=>{const x=c.pos[id];if(c.areas.includes(id)&&x){const k=x.da+'-'+x.na;t[k]=(t[k]||0)+1}});return t};
+ const mc=MAATER.map(m=>[m,moved.filter(c=>c.maate.includes(m)).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);
  const ac=AKTORER.map(a=>[a,moved.filter(c=>c.akt.includes(a)).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).slice(0,5);
- const max=mc.length?mc[0][1]:1;
- const mineList=S.kids.map((c,i)=>`<div class="kidrow"><b>${w} ${i+1}</b><span>${c.areas.filter(id=>c.pos[id]).map(id=>{const x=c.pos[id];return `<span class="mvsum ${x.na>x.da?'up':x.na<x.da?'down':'same'}">${SUB[id][0]}: ${SIT[x.da]} → ${SIT[x.na]}</span>`}).join(' ')}</span>${c.txt.trim()?`<div class="quote">${esc(c.txt)}</div>`:''}</div>`).join('');
- return `${sims.length?`<div class="banner2">Dere registrerte ${S.kids.length}. De andre ${sims.length} er eksempler, så dere ser hvordan oversikten blir med alle ${S.total}.</div>`:''}
- <div class="sheet"><h2>Bevegelse hos dere</h2><p class="small muted">${p.navn} · ${all.length} fulgt opp det siste året · ${moved.length} har flyttet seg mot bærekraftig på minst ett område</p>
-  ${ids.map(row).join('')}
-  <div class="legend">${SIT.map((s,i)=>`<span><i class="s${i}"></i>${s}</span>`).join('')}</div></div>
- <div class="sheet"><h2>Det som gikk igjen der det ble bevegelse</h2><p class="small muted">Blant de ${moved.length} som flyttet seg mot bærekraftig.</p>
-  <div class="hbars">${mc.map(([m,v])=>`<div class="hb"><span class="small">${m}</span><div class="hbar"><span style="width:${v/max*100}%"></span></div><b class="small">${v}</b></div>`).join('')}</div>
-  ${ac.length?`<p class="small"><b>Oftest koblet på:</b> ${ac.map(([a,v])=>`${a} (${v})`).join(', ')}</p>`:''}</div>
- <div class="sheet"><h2>De dere registrerte</h2>${mineList}</div>
- <div class="sheet"><h2>Hele kommunen</h2><p class="small muted">Alle livsfaser og alle team, samlet i felles livsområder. Uthevet: der deres tall er med.</p>
-  ${rig}
-  <div class="legend"><span><i class="up"></i>mot bærekraftig</span><span><i class="same"></i>uendret</span><span><i class="down"></i>feil vei</span></div></div>
+ const quotes=S.kids.map((c,i)=>c.txt.trim()?`<div class="quote">${esc(c.txt)}</div>`:'').join('');
+ return `${sims.length?`<div class="banner2">Dere registrerte ${S.kids.length}. De andre ${sims.length} ligner på dem, så dere ser hvordan bildet blir med alle ${S.total}.</div>`:''}
+ <div class="sheet"><h2>Bevegelse hos dere</h2>
+  <p class="headline"><span class="bignum">${moved.length} av ${all.length}</span> har flyttet seg mot høyre på minst ett område.</p>
+  ${ids.map(id=>mrow(id,trans(id))).join('')}</div>
+ <div class="sheet"><h2>Det som gikk igjen der det ble bevegelse</h2>
+  ${mc.length?`<div class="hbars">${mc.map(([m,v])=>`<div class="hb"><span class="small">${m}</span><div class="hbar"><span style="width:${v/moved.length*100}%"></span></div><b class="small">${v}</b></div>`).join('')}</div><p class="small muted">Antall av de ${moved.length} som flyttet seg.</p>`:'<p class="muted">Dere har ikke valgt arbeidsmåter.</p>'}
+  ${ac.length?`<p class="small"><b>Oftest koblet på:</b> ${ac.map(([a,v])=>`${a} (${v})`).join(', ')}</p>`:''}
+  ${quotes?`<p class="small muted">Med deres ord:</p>${quotes}`:''}</div>
+ <div class="sheet"><h2>Hele kommunen</h2>
+  ${rigRows((k,t)=>{let m=0;all.forEach(c=>c.areas.forEach(id=>{const x=c.pos[id];if(SUB[id][1]===k&&x){t[x.na>x.da?0:x.na<x.da?2:1]++;m++}}));return m})}</div>
  ${bar(back,'',`<button class="btn" data-a="reset">Start på nytt ↺</button>`)}`;
 }
 function view(){
