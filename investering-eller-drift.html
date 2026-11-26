@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102f50">
+  <title>Investering eller drift? – beslutningsveileder</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #102f50;
+      --blue: #155e78;
+      --teal: #167e88;
+      --teal-bright: #17a99b;
+      --ink: #142f48;
+      --body: #334c61;
+      --muted: #52677a;
+      --line: #d6e3ed;
+      --panel: #f0f6fa;
+      --white: #ffffff;
+      --yes-bg: #e0f4e9;
+      --yes-border: #b6dfc9;
+      --yes-ink: #145c38;
+      --no-bg: #fff0e9;
+      --no-border: #f3cbbb;
+      --no-ink: #963c22;
+      --shadow: 0 8px 24px rgba(24, 54, 80, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px 16px 48px;
+      background: #f5f8fb;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    button { font: inherit; }
+    .app { width: min(100%, 720px); margin: 0 auto; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 26px;
+      color: var(--white);
+      border-radius: 22px;
+      background: linear-gradient(125deg, var(--navy) 0%, var(--blue) 65%, var(--teal) 100%);
+      box-shadow: var(--shadow);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      right: -60px;
+      top: -90px;
+      border: 30px solid rgba(255,255,255,.08);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .eyebrow {
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      margin: 10px 0 0;
+      font-size: clamp(2rem, 6vw, 2.7rem);
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+    .hero p {
+      max-width: 540px;
+      margin: 12px 0 0;
+      color: #f0f8ff;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+    .hero-pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      padding:6px 11px;
+      border-radius:999px;
+      background:rgba(255,255,255,.13);
+      color:#f4ffff;
+      font-size:.75rem;
+      font-weight:750;
+    }
+    .view { margin-top: 18px; }
+    .hidden { display:none !important; }
+    .welcome {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #edf5fa;
+    }
+    .welcome-icon {
+      display:grid;
+      place-items:center;
+      width:48px;
+      height:48px;
+      border-radius:15px;
+      background:#d7eeeb;
+      color:#075d5b;
+      font-size:1.5rem;
+    }
+    .welcome h2 { margin:14px 0 6px; color:#153750; font-size:1.3rem; line-height:1.3; }
+    .welcome p { margin:8px 0 0; color:var(--body); font-size:.94rem; line-height:1.7; }
+    .choice-preview { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+    .preview {
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:13px;
+      background:#fff;
+      text-align:center;
+    }
+    .preview strong { display:block; font-size:1.15rem; }
+    .preview span { color:#40596e; font-size:.78rem; font-weight:650; }
+    .preview.yes strong { color:var(--yes-ink); }
+    .preview.no strong { color:var(--no-ink); }
+    .primary {
+      width:100%;
+      margin-top:14px;
+      padding:16px 20px;
+      border:0;
+      border-radius:13px;
+      background:var(--blue);
+      color:white;
+      font-weight:800;
+      cursor:pointer;
+      transition:background .15s, transform .15s;
+    }
+    .primary:hover { background:#104b63; transform:translateY(-1px); }
+    .primary:focus-visible, .answer:focus-visible, .back:focus-visible, summary:focus-visible {
+      outline:3px solid #08799a;
+      outline-offset:3px;
+    }
+    .progress-meta {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin:0 1px 8px;
+      color:#43576b;
+      font-size:.78rem;
+      font-weight:800;
+    }
+    .progress-track { height:8px; overflow:hidden; border-radius:999px; background:#e1eaf0; }
+    .progress-fill { width:0; height:100%; border-radius:999px; background:var(--teal-bright); transition:width .25s ease; }
+    .question-card {
+      margin-top:16px;
+      padding:clamp(19px, 4vw, 25px);
+      border:1px solid #dce5ed;
+      border-radius:19px;
+      background:var(--white);
+      box-shadow:var(--shadow);
+      animation:enter .25s ease;
+    }
+    @keyframes enter { from { opacity:.35; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+    .category {
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:7px 11px;
+      border-radius:999px;
+      background:#e5f2f3;
+      color:#105d68;
+      font-size:.72rem;
+      font-weight:850;
+    }
+    .question-title {
+      margin:18px 0 0;
+      color:var(--ink);
+      font-size:clamp(1.45rem, 4vw, 1.9rem);
+      font-weight:850;
+      line-height:1.3;
+      letter-spacing:-.025em;
+    }
+    .question-subtitle { margin:11px 0 0; color:#42566b; font-size:.97rem; line-height:1.7; }
+    .answers { display:grid; gap:12px; margin-top:22px; }
+    .answer {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      width:100%;
+      padding:17px 18px;
+      border:2px solid transparent;
+      border-radius:14px;
+      text-align:left;
+      font-size:1.12rem;
+      font-weight:850;
+      cursor:pointer;
+      transition:transform .15s, filter .15s, box-shadow .15s;
+    }
+    .answer:hover { transform:translateY(-2px); filter:brightness(.98); box-shadow:0 5px 14px rgba(20,47,72,.08); }
+    .answer.yes { color:var(--yes-ink); background:var(--yes-bg); border-color:var(--yes-border); }
+    .answer.no { color:var(--no-ink); background:var(--no-bg); border-color:var(--no-border); }
+    .answer-icon {
+      display:grid;
+      place-items:center;
+      flex:0 0 35px;
+      width:35px;
+      height:35px;
+      border-radius:50%;
+      background:rgba(255,255,255,.82);
+      font-size:1.05rem;
+    }
+    .help {
+      margin-top:14px;
+      padding:15px 17px;
+      border:1px solid var(--line);
+      border-radius:13px;
+      background:var(--panel);
+    }
+    .help summary {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      color:#164b67;
+      font-size:.9rem;
+      font-weight:850;
+      cursor:pointer;
+      list-style:none;
+    }
+    .help summary::-webkit-details-marker { display:none; }
+    .help summary::after { content:"+"; font-size:1.35rem; line-height:1; }
+    .help[open] summary::after { content:"−"; }
+    .help-content { padding-top:7px; color:#334c61; font-size:.9rem; line-height:1.75; }
+    .help-content p { margin:9px 0; }
+    .help-content ul, .help-content ol { margin:8px 0; padding-left:22px; }
+    .help-content li { margin:5px 0; }
+    .back {
+      margin-top:8px;
+      padding:8px 0;
+      border:0;
+      background:transparent;
+      color:#38556b;
+      font-size:.85rem;
+      font-weight:800;
+      text-align:left;
+      cursor:pointer;
+    }
+    .result {
+      padding:24px;
+      border-radius:19px;
+      border:1px solid;
+    }
+    .result.invest { color:#145b38; background:#dff3e7; border-color:#a8d9bc; }
+    .result.drift { color:#883c20; background:#fff0e7; border-color:#efc5ae; }
+    .result-label {
+      display:inline-block;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.75);
+      font-size:.72rem;
+      font-weight:900;
+      letter-spacing:.09em;
+    }
+    .result h2 { margin:13px 0 9px; font-size:clamp(1.5rem,4vw,2rem); font-weight:900; line-height:1.2; letter-spacing:-.03em; }
+    .result p { margin:0; font-size:.96rem; line-height:1.7; }
+    .history-panel {
+      margin-top:15px;
+      padding:20px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#edf5fa;
+    }
+    .history-panel h3 { margin:0 0 5px; color:#173b56; font-size:1.05rem; }
+    .history-intro { margin:0 0 8px; color:#425a6e; font-size:.86rem; }
+    .history-row { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #d4e0e8; color:#203b53; font-size:.88rem; line-height:1.5; }
+    .history-row:last-child { border:0; }
+    .mark {
+      display:grid;
+      place-items:center;
+      flex:0 0 27px;
+      width:27px;
+      height:27px;
+      border-radius:50%;
+      background:#dce9f1;
+      color:#164761;
+      font-size:.75rem;
+      font-weight:900;
+    }
+    .history-answer { margin-top:3px; color:#52677a; }
+    .notice { margin-top:14px; padding:15px 17px; border:1px solid var(--line); border-radius:13px; background:var(--panel); color:#334c61; font-size:.86rem; line-height:1.7; }
+    .notice strong { color:#173b56; }
+    .footer { margin-top:18px; color:#63788a; font-size:.75rem; text-align:center; }
+    @media (max-width:480px) {
+      body { padding:14px 11px 32px; }
+      .hero { padding:21px; border-radius:18px; }
+      .question-card { padding:18px; }
+      .answer { padding:15px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div class="eyebrow">Kommunal beslutningsveileder</div>
+      <h1>Investering<br>eller drift?</h1>
+      <p>Finn ut hvordan et kjøp eller en anskaffelse skal behandles. Vi hjelper deg steg for steg.</p>
+      <div class="hero-pills">
+        <span class="pill">✓ Enkel veiledning</span>
+        <span class="pill">Ett spørsmål om gangen</span>
+      </div>
+    </header>
+
+    <section id="start-view" class="view">
+      <div class="welcome">
+        <div class="welcome-icon" aria-hidden="true">✦</div>
+        <h2>La oss finne riktig svar!</h2>
+        <p>Du trenger ikke kunne regnskapsreglene. Vi stiller deg noen enkle spørsmål om det du skal kjøpe.</p>
+        <div class="choice-preview" aria-hidden="true">
+          <div class="preview yes"><strong>Ja</strong><span>Ett svar</span></div>
+          <div class="preview no"><strong>Nei</strong><span>Ett svar</span></div>
+        </div>
+        <p>Du kan åpne forklaringer underveis og gå tilbake hvis du vil endre et svar.</p>
+      </div>
+      <button id="start-button" class="primary" type="button">Kom i gang <span aria-hidden="true">→</span></button>
+    </section>
+
+    <section id="question-view" class="view hidden" aria-live="polite">
+      <div class="progress-meta">
+        <span id="progress-label">SPØRSMÅL 1</span>
+        <span id="progress-count">Steg 1</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="Fremdrift" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <div class="question-card">
+        <span id="question-category" class="category"></span>
+        <h2 id="question-title" class="question-title"></h2>
+        <p id="question-subtitle" class="question-subtitle"></p>
+        <div class="answers">
+          <button class="answer yes" type="button" data-answer="yes"><span>Ja</span><span class="answer-icon" aria-hidden="true">✓</span></button>
+          <button class="answer no" type="button" data-answer="no"><span>Nei</span><span class="answer-icon" aria-hidden="true">✕</span></button>
+        </div>
+      </div>
+      <details id="help-details" class="help">
+        <summary>Trenger du hjelp til å forstå spørsmålet?</summary>
+        <div id="help-content" class="help-content"></div>
+      </details>
+      <button id="back-button" class="back" type="button">← Tilbake til forrige spørsmål</button>
+    </section>
+
+    <section id="result-view" class="view hidden" aria-live="polite">
+      <div id="result-card" class="result">
+        <span id="result-label" class="result-label">RESULTAT</span>
+        <h2 id="result-title"></h2>
+        <p id="result-description"></p>
+      </div>
+      <div class="history-panel">
+        <h3>Din vei gjennom veiviseren</h3>
+        <p class="history-intro">Her ser du svarene som ledet frem til resultatet.</p>
+        <div id="history-list"></div>
+      </div>
+      <div class="notice"><strong>Viktig:</strong> Dette er en veiledende sjekkliste basert på kommunens flytskjema. Ved tvil bør du få anskaffelsen vurdert av økonomi- eller regnskapsansvarlig.</div>
+      <button id="restart-button" class="primary" type="button">↻ Start på nytt</button>
+    </section>
+    <footer class="footer">Beslutningsveileder · Investering eller drift?</footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const questions = {
+        owner: {
+          category: "Hvem eier det du kjøper?",
+          title: "Er kommunen eier, medeier eller den som i praksis har ansvaret for det du kjøper?",
+          subtitle: "Det er ikke alltid den som står som eier på papiret, som også har ansvaret for eiendelen.",
+          help: `<p>Kommunen kan regnes som reell eier selv om eiendelen formelt eies av noen andre.</p>
+            <p>Det viktigste er om kommunen i praksis bestemmer hvordan eiendelen skal brukes, har kontroll over den og bærer den største økonomiske risikoen og ansvaret.</p>`
+        },
+        standard: {
+          category: "Hva innebærer kjøpet?",
+          title: "Gjør kjøpet at noe vi allerede har, blir bedre eller får nye muligheter?",
+          subtitle: "Vi spør om kjøpet gir en vesentlig forbedring sammenlignet med hvordan det var da vi fikk det.",
+          help: `<p>Det handler ikke om at nye produkter generelt er bedre enn gamle. Det handler om at det vi allerede har, faktisk får en høyere standard eller nye muligheter.</p>
+            <p>Eksempler:</p><ul>
+            <li>Levetiden blir lengre.</li><li>Kapasiteten øker.</li><li>Noe får nye funksjoner.</li>
+            <li>Vi kan bruke det på flere eller andre måter.</li><li>Arealet eller standarden blir bedre.</li>
+            <li>Verdien eller kvaliteten øker vesentlig.</li><li>Hele eller vesentlige deler fremstår som nytt.</li>
+            </ul><p>Vanlig vedlikehold eller utskifting til tilsvarende standard betyr ikke nødvendigvis at standarden er hevet.</p>`
+        },
+        threshold: {
+          category: "Pris og levetid",
+          title: "Koster anskaffelsen mer enn 100 000 kroner, og skal den brukes i minst 3 år?",
+          subtitle: "Begge deler må være oppfylt for at du skal svare ja.",
+          help: `<p>Se på den samlede kostnaden ved kjøpet. Ta med mer enn bare prisen på selve produktet.</p>
+            <p>Du skal også regne med nødvendige utgifter som følger med kjøpet, for eksempel offentlige avgifter, frakt, montering og andre kostnader som må til for å kunne ta det i bruk eller overta det.</p>
+            <p>Hvis anskaffelsen koster nøyaktig 100 000 kroner, er svaret nei på spørsmålet om den koster mer enn 100 000 kroner.</p>`
+        },
+        system: {
+          category: "Flere deler som hører sammen",
+          title: "Kjøper du flere ting som sammen skal brukes til samme formål?",
+          subtitle: "Tenk på om delene hører sammen og fungerer som én samlet løsning.",
+          help: `<p>Eksempel: Kommunen kjøper inn mange PC-er som inngår i en samlet innkjøpsplan.</p>
+            <p>Selv om hver enkelt PC ikke koster så mye, kan de inngå i en større samlet anskaffelse.</p>`
+        },
+        significant: {
+          category: "Verdien av hver enkelt ting",
+          title: "Har hver enkelt ting du kjøper, en betydelig verdi i seg selv?",
+          subtitle: "Her skal du vurdere hver enkelt del for seg, ikke bare den samlede prisen.",
+          help: `<p>Eksempler på ting som regnes som anskaffelser av ubetydelig verdi, er trygghetsalarmer og mobiltelefoner.</p>
+            <p>Spør deg selv om den enkelte eiendelen er betydelig nok til å vurderes som en egen investering.</p>`
+        },
+        installation: {
+          category: "Bygging på andres grunn",
+          title: "Skal kommunen bygge eller etablere noe varig på en annens eiendom, til nytte for lokalsamfunnet?",
+          subtitle: "Dette kan for eksempel være en fast installasjon på grunn som kommunen ikke eier.",
+          help: `<p>Det må være snakk om noe som er fysisk knyttet til grunnen og som skal stå der over tid.</p>
+            <p>To forhold må være oppfylt:</p><ul>
+            <li>Det må være en tydelig fysisk tilknytning til grunnen. Det kan ikke være noe som bare står løst eller enkelt kan flyttes.</li>
+            <li>Det må være meningen at installasjonen skal stå der over tid.</li>
+            </ul><p>Det må først og fremst være lokalsamfunnet som får nytte av tiltaket, ikke grunneieren.</p>`
+        },
+        grant: {
+          category: "Tilskudd til en annen kommune",
+          title: "Gir kommunen penger til en annen kommune for å bygge eller kjøpe noe varig som brukes til en lovpålagt oppgave?",
+          subtitle: "Her spør vi om kommunen gir økonomisk støtte til en annen kommune.",
+          help: `<p>Eksempel: Kommunen gir tilskudd til bygging av en skole i en nabokommune, der elever fra vår kommune går.</p>
+            <p>Det må være en oppgave kommunen har et lovpålagt ansvar for.</p>`
+        }
+      };
+
+      // Beslutningslogikken følger flytskjemaet:
+      // Eier ja -> standard; eier nei -> fast installasjon.
+      // Standard ja -> terskel; standard nei -> drift.
+      // Terskel ja -> investering; terskel nei -> samlet system.
+      // Samlet system ja -> betydelig verdi; nei -> drift.
+      // Betydelig verdi ja -> investering; nei -> drift.
+      // Fast installasjon ja -> investering; nei -> tilskudd.
+      // Tilskudd ja -> investering; nei -> drift.
+      const transitions = {
+        owner: { yes: "standard", no: "installation" },
+        standard: { yes: "threshold", no: "drift" },
+        threshold: { yes: "invest", no: "system" },
+        system: { yes: "significant", no: "drift" },
+        significant: { yes: "invest", no: "drift" },
+        installation: { yes: "invest", no: "grant" },
+        grant: { yes: "invest", no: "drift" }
+      };
+
+      const $ = (id) => document.getElementById(id);
+      const views = ["start-view", "question-view", "result-view"];
+      let history = [];
+      let answers = {};
+
+      function showView(viewId) {
+        views.forEach(id => $(id).classList.toggle("hidden", id !== viewId));
+      }
+
+      function updateProgress(step, complete = false) {
+        const percent = complete ? 100 : Math.min(100, (step / 5) * 100);
+        $("progress-fill").style.width = percent + "%";
+        $("progress-bar").setAttribute("aria-valuenow", String(Math.round(percent)));
+        $("progress-label").textContent = complete ? "RESULTAT" : "SPØRSMÅL " + step;
+        $("progress-count").textContent = complete ? "Ferdig!" : "Steg " + step;
+      }
+
+      function renderQuestion() {
+        const id = history[history.length - 1];
+        const item = questions[id];
+        const step = history.length;
+
+        updateProgress(step);
+        $("question-category").textContent = "● " + item.category;
+        $("question-title").textContent = item.title;
+        $("question-subtitle").textContent = item.subtitle;
+        $("help-content").innerHTML = item.help;
+        $("help-details").open = false;
+        $("back-button").hidden = step === 1;
+        showView("question-view");
+
+        // Flytt fokus til spørsmålet ved overgang, også nyttig for tastaturbrukere.
+        $("question-title").setAttribute("tabindex", "-1");
+        $("question-title").focus({ preventScroll: true });
+      }
+
+      function choose(answer) {
+        const current = history[history.length - 1];
+        answers[current] = answer;
+        const next = transitions[current][answer];
+        history.push(next);
+
+        if (next === "invest" || next === "drift") {
+          renderResult(next);
+        } else {
+          renderQuestion();
+        }
+      }
+
+      function renderResult(type) {
+        const isInvestment = type === "invest";
+        updateProgress(history.length - 1, true);
+
+        $("result-card").className = "result " + (isInvestment ? "invest" : "drift");
+        $("result-label").textContent = isInvestment ? "✓ INVESTERING" : "✓ DRIFT";
+        $("result-title").textContent = isInvestment
+          ? "Dette skal behandles som en investering"
+          : "Dette skal behandles som en driftsutgift";
+        $("result-description").textContent = isInvestment
+          ? "Svarene dine viser at anskaffelsen skal føres i investeringsregnskapet. Det betyr at kjøpet behandles som en investering."
+          : "Svarene dine viser at anskaffelsen skal føres i driftsregnskapet. Det betyr at kjøpet behandles som en vanlig driftsutgift.";
+
+        const rows = history.slice(0, -1).map((id, index) => {
+          const row = document.createElement("div");
+          row.className = "history-row";
+          const mark = document.createElement("span");
+          mark.className = "mark";
+          mark.textContent = String(index + 1);
+          const content = document.createElement("div");
+          const title = document.createElement("strong");
+          title.textContent = questions[id].category;
+          const answer = document.createElement("div");
+          answer.className = "history-answer";
+          answer.textContent = "Du svarte: " + (answers[id] === "yes" ? "Ja" : "Nei");
+          content.append(title, answer);
+          row.append(mark, content);
+          return row;
+        });
+
+        const finalRow = document.createElement("div");
+        finalRow.className = "history-row";
+        const finalMark = document.createElement("span");
+        finalMark.className = "mark";
+        finalMark.textContent = "✓";
+        const finalContent = document.createElement("div");
+        const finalTitle = document.createElement("strong");
+        finalTitle.textContent = "Resultat";
+        const finalAnswer = document.createElement("div");
+        finalAnswer.className = "history-answer";
+        finalAnswer.textContent = isInvestment ? "Investering" : "Driftsutgift";
+        finalContent.append(finalTitle, finalAnswer);
+        finalRow.append(finalMark, finalContent);
+
+        $("history-list").replaceChildren(...rows, finalRow);
+        showView("result-view");
+        $("result-title").setAttribute("tabindex", "-1");
+        $("result-title").focus({ preventScroll: true });
+      }
+
+      function start() {
+        history = ["owner"];
+        answers = {};
+        renderQuestion();
+      }
+
+      $("start-button").addEventListener("click", start);
+      $("restart-button").addEventListener("click", start);
+      document.querySelectorAll("[data-answer]").forEach(button => {
+        button.addEventListener("click", () => choose(button.dataset.answer));
+      });
+      $("back-button").addEventListener("click", () => {
+        if (history.length <= 1) return;
+        const removed = history.pop();
+        if (removed === "invest" || removed === "drift") history.pop();
+        delete answers[history[history.length - 1]];
+        renderQuestion();
+      });
+    })();
+  </script>
+</body>
+</html>
