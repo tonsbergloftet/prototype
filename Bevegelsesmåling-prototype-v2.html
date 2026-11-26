@@ -320,7 +320,7 @@ function vBarnOmr(){
  const p=phase(),c=kid(),w=word();
  return `<div class="sheet ${S.err==='areas'?'need':''}" id="f-areas"><span class="eyebrow">${w} ${S.k+1}</span>
   <h2>Hvilke områder har vært tema?</h2>
-  <p class="small muted">Tenk på ${ENTALL[S.phase]==='familie'?'én familie':ENTALL[S.phase]==='ung'?'én ungdom':'ett barn'}. Velg områdene der det har skjedd noe, og der dere har fulgt med uten at noe endret seg.</p>
+  <p class="small muted">Tenk på ${ENTALL[S.phase]==='familie'?'én familie':ENTALL[S.phase]==='ung'?'én ungdom':'ett barn'}. Velg områdene dere har fulgt med på. Ta med både områder der situasjonen har endret seg, og områder der den har vært uendret.</p>
   <div class="chiprow">${p.ids.map(id=>`<button class="chip ${c.areas.includes(id)?'sel':''}" data-a="area" data-v="${id}">${SUB[id][0]}</button>`).join('')}</div>
   ${S.err==='areas'?'<p class="errmsg">Velg minst ett område.</p>':''}</div>
  ${c.areas.length?`<div class="sheet"><h2>Fra hvor, til hvor?</h2><div class="stack">${p.ids.filter(id=>c.areas.includes(id)).map(areaCard).join('')}</div></div>`:''}
